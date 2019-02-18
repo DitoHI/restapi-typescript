@@ -3,30 +3,30 @@
 #### Monolith vs Microservices
 
 ##### Monolith
-#####`Plus`
+`Plus`
 * Mudah dikembangkan
 * Mudah digunakan
 
-#####`Minus`
+`Minus`
 * Memiliki batasan dalam ukuran dan kompleksitas
 * Ukuran aplikasi dapat memperlambat
 
 ##### Microservices
-#####`Plus`
+`Plus`
 * Setiap layanan dapat dikembangkan mandiri
 * Menangani masalah kompleksitias
 
-#####`Minus`
+`Minus`
 * Penerapan lebih kompleks
 * Biaya lebih besar
 
 ##### Kapan Penggunaan ?
 
-#####`Monolith`
+`Monolith`
 * Tahap pendirian
 * Bangun produk yang belum terbukti
 
-#####`Microservices`
+`Microservices`
 * Perlu cepat dan pengiriman independen
 * Platform efisien
 * Berencana menumbuhkan tim

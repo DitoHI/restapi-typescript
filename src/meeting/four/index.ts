@@ -1,4 +1,9 @@
-export const persons: Array<{ username: string, age: number }> = [
+export class Person {
+    public username: string;
+    public age: number;
+}
+
+export const persons: Person[] = [
     {
         username: "Dito",
         age : 22

@@ -7,15 +7,21 @@ const express_1 = __importDefault(require("express"));
 const app = express_1.default();
 const port = 8080; // default port to listen
 // courses
-// import {divide, multiply} from "./meeting/three/mult";
 const four_1 = require("./meeting/four");
 // define a route handler for the default home page
 app.get("/", (req, res) => {
-    res.send(`Namaku adalah ${four_1.persons[0].username}, umurku ${four_1.persons[0].age} tahun`);
-    // const input: number[] = [4, 2];
-    // const [first, second] = input;
-    // res.send(`Multiply of ${first} & ${second} : ${multiply(first, second)} <br>
-    //     Divide of ${first} & ${second} : ${divide(first, second)}`);
+    // print all the persons
+    let words = "";
+    // push new person
+    const newPerson = {
+        username: "Sinichi",
+        age: 20
+    };
+    four_1.persons.push(newPerson);
+    for (const person of four_1.persons) {
+        words += `Namaku adalah ${person.username}, umurku ${person.age} tahun</br>`;
+    }
+    res.send(words);
 });
 // start the Express server
 app.listen(port, () => {

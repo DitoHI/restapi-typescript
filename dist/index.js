@@ -37,15 +37,9 @@ app.get("/:operator/:a/:b", (req, res) => {
 app.get("/kalkulator", (req, res) => {
     const a = parseInt(req.query.a, 10);
     const b = parseInt(req.query.b, 10);
-    let operator = "";
-    if (req.query.operator === undefined) {
-        operator = encodeURIComponent(req.query.operator);
-    }
-    else {
-        operator = req.query.operator;
-    }
+    const operator = req.query.operator;
     const result = mult_1.calculator(a, b, operator);
-    res.send(`Result of ${a} ${encodeURIComponent(operator)} ${b} : ${result}`);
+    res.send(`Result of ${a} ${operator} ${b} : ${result}`);
 });
 // start the Express server
 app.listen(port, () => {

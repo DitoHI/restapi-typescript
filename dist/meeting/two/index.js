@@ -22,7 +22,7 @@ function pow(a, b) {
         total = 1;
     }
     else {
-        for (let i = 0; i < b; ++i) {
+        for (let i = 0; i < b; i = i + 1) {
             if (i !== 0) {
                 total *= a;
             }

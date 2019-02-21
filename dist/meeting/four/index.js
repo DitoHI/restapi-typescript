@@ -5,15 +5,15 @@ class Person {
 exports.Person = Person;
 exports.persons = [
     {
-        username: "Dito",
+        username: 'Dito',
         age: 22
     },
     {
-        username: "Elfa",
+        username: 'Elfa',
         age: 20
     },
     {
-        username: "Indra",
+        username: 'Indra',
         age: 24
     },
 ];

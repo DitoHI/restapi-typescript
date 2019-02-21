@@ -8,20 +8,20 @@ exports.divide = (a, b) => {
 };
 exports.calculator = (a, b, c) => {
     switch (c) {
-        case "+":
-        case "plus":
+        case '+':
+        case 'plus':
             return a + b;
-        case "-":
-        case "minus":
+        case '-':
+        case 'minus':
             return a - b;
-        case "*":
-        case "multiply":
+        case '*':
+        case 'multiply':
             return a * b;
-        case "/":
-        case "divide":
+        case '/':
+        case 'divide':
             return a / b;
         default:
-            console.log("Invalid Operator");
+            console.log('Invalid Operator');
     }
 };
 //# sourceMappingURL=mult.js.map

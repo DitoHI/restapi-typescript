@@ -16,7 +16,7 @@ Calculator and Saving its histories. This simple api with get your request in th
 - routes: define routes with the same path `/history` with the differentiated of routing method
 
 ### Prerequisites
-This sample project run on private environment. It is made to protect the privacy of maintainer. You just can change the `process.env` in this project to your static environment
+This sample project runs on private environment. It is made to protect the privacy of maintainer. You just can change the variable `process.env` in this project to your static environment
 
 ### Examples
 This is the examples of histories data in json

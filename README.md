@@ -183,7 +183,7 @@ Modify history with new operator and change the result synchronously
 }
 ```
 
-`localhost:8080/history?operator=multiply&operatorChanged=plus` with Method PUT request <br />
+`localhost:8080/history?operator=plus&operatorChanged=divide` with Method PUT request <br />
 
 **After Result** <br />
 ```json

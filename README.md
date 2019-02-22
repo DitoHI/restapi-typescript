@@ -183,9 +183,9 @@ Modify history with new operator and change the result synchronously
 }
 ```
 
-`localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
+`localhost:8080/history?operator=multiply&operatorChanged=plus` with Method PUT request <br />
 
-**After Result** with Method PUT request <br />
+**After Result** <br />
 ```json
 {
     "message": "History updated",

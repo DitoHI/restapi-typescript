@@ -200,6 +200,6 @@ Delete single or multiple histories based on the request parameters
 
 #### Credits
 
-This is the result of **Code Challenge** in *Glints Academy* and *Binar* for week one
+This is the result of **Code Challenge** by *Glints Academy* and *Binar* for week one
 
 

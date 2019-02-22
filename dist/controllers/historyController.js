@@ -42,8 +42,9 @@ const addHistory = (numberOne, numberTwo, operator) => {
     });
 };
 exports.addHistory = addHistory;
-const getHistory = (numberOne, numberTwo, operator, result) => {
+const getHistory = (id, numberOne, numberTwo, operator, result) => {
     const findHistory = {};
+    id != null ? findHistory._id = id : null;
     numberOne != null ? findHistory.numberOne = numberOne : null;
     numberTwo != null ? findHistory.numberTwo = numberTwo : null;
     operator != null ? findHistory.operator = operator : null;
@@ -64,7 +65,7 @@ const getHistory = (numberOne, numberTwo, operator, result) => {
                 }
                 else {
                     statusCode = 200;
-                    messageLog = 'History has/have been found';
+                    messageLog = 'History found';
                 }
             }
             resolve([statusCode, messageLog, output]);
@@ -91,7 +92,7 @@ const updateHistory = (operatorBefore, operatorChanged) => {
                 }
                 else {
                     statusCode = 307;
-                    messageLog = 'Successfully updating history';
+                    messageLog = 'History updated';
                     const historiesModified = [];
                     const historiesIdChanged = histories.map((history) => history._id);
                     histories.forEach((history) => __awaiter(this, void 0, void 0, function* () {
@@ -113,4 +114,28 @@ const updateHistory = (operatorBefore, operatorChanged) => {
     });
 };
 exports.updateHistory = updateHistory;
+const deleteHistory = (id, numberOne, numberTwo, operator, result) => {
+    const findHistory = {};
+    id != null ? findHistory._id = id : null;
+    numberOne != null ? findHistory.numberOne = numberOne : null;
+    numberTwo != null ? findHistory.numberTwo = numberTwo : null;
+    operator != null ? findHistory.operator = operator : null;
+    result != null ? findHistory.result = result : null;
+    return new Promise((resolve) => {
+        history_1.historyModel.deleteMany(findHistory, (err) => {
+            let statusCode = 0;
+            let messageLog = '';
+            if (err) {
+                statusCode = 400;
+                messageLog = 'Failed deleting at MongoDB';
+            }
+            else {
+                statusCode = 200;
+                messageLog = 'History deleted';
+            }
+            resolve([statusCode, messageLog]);
+        });
+    });
+};
+exports.deleteHistory = deleteHistory;
 //# sourceMappingURL=historyController.js.map

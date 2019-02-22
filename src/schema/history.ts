@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 interface IHistory {
-  _id: number;
+  _id: string;
   numberOne: number;
   numberTwo: number;
   operator: string;

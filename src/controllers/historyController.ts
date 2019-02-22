@@ -36,8 +36,9 @@ const addHistory = (numberOne: number, numberTwo: number, operator: string) => {
   });
 };
 
-const getHistory = (numberOne: number, numberTwo: number, operator: string, result: number) => {
+const getHistory = (id: number, numberOne: number, numberTwo: number, operator: string, result: number) => {
   const findHistory: { [k: string]: any } = {};
+  id != null ? findHistory._id = id : null;
   numberOne != null ? findHistory.numberOne = numberOne : null;
   numberTwo != null ? findHistory.numberTwo = numberTwo : null;
   operator != null ? findHistory.operator = operator : null;
@@ -56,7 +57,7 @@ const getHistory = (numberOne: number, numberTwo: number, operator: string, resu
           messageLog = 'No history found';
         } else {
           statusCode = 200;
-          messageLog = 'History has/have been found';
+          messageLog = 'History found';
         }
       }
       resolve([statusCode, messageLog, output]);
@@ -81,7 +82,7 @@ const updateHistory = (operatorBefore: string, operatorChanged: string) => {
           resolve([statusCode, messageLog, output]);
         } else {
           statusCode = 307;
-          messageLog = 'Successfully updating history';
+          messageLog = 'History updated';
           const historiesModified: IHistory[] = [];
           const historiesIdChanged = histories.map((history) => history._id);
           histories.forEach(async (history) => {
@@ -89,7 +90,7 @@ const updateHistory = (operatorBefore: string, operatorChanged: string) => {
             history.operator = operatorChanged;
             historiesModified.push(history);
             historyModel
-              .findByIdAndUpdate(history._id, history,  (errChild, outputChild: any) => {
+              .findByIdAndUpdate(history._id, history, (errChild, outputChild: any) => {
                 if (errChild) {
                   const historyChanged = outputChild as IHistory;
                   messageLog = `Failed updating history[_id: ${historyChanged._id}]`;
@@ -103,4 +104,28 @@ const updateHistory = (operatorBefore: string, operatorChanged: string) => {
   });
 };
 
-export { addHistory, getHistory, updateHistory };
+const deleteHistory =
+  (id: number, numberOne: number, numberTwo: number, operator: string, result: number) => {
+    const findHistory: { [k: string]: any } = {};
+    id != null ? findHistory._id = id : null;
+    numberOne != null ? findHistory.numberOne = numberOne : null;
+    numberTwo != null ? findHistory.numberTwo = numberTwo : null;
+    operator != null ? findHistory.operator = operator : null;
+    result != null ? findHistory.result = result : null;
+    return new Promise((resolve) => {
+      historyModel.deleteMany(findHistory, (err) => {
+        let statusCode: number = 0;
+        let messageLog: string = '';
+        if (err) {
+          statusCode = 400;
+          messageLog = 'Failed deleting at MongoDB';
+        } else {
+          statusCode = 200;
+          messageLog = 'History deleted';
+        }
+        resolve([statusCode, messageLog]);
+      });
+    });
+  };
+
+export { addHistory, getHistory, updateHistory, deleteHistory };

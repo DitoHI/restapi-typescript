@@ -91,7 +91,7 @@ Get responding history based on requested parameters
     ]
 }
 ```
-*Using two parameters [a, b]*<br />
+*Using two parameters [a, operator]*<br />
 `localhost:8080/history?a=3&operator=plus` <br />
 
 **Result**<br />
@@ -191,7 +191,7 @@ Delete single or multiple histories based on the request parameters
     "message": "History deleted"
 }
 ```
-*Using two parameters [a, b]*<br />
+*Using two parameters [b, operator]*<br />
 `localhost:8080/history?b=12&operator=minus` <br />
 
 **Result**<br />

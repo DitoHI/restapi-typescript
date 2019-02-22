@@ -153,13 +153,12 @@ Modify history with new operator and change the result synchronously
 - **HTTP request method**: `put` <br />
 - **Types of request**: `req.query` <br />
 - **examples**: <br />
-`localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
 
-
-**Result**<br />
+`localhost:8080/history?operator=plus` <br />
+**Before Result**<br />
 ```json
 {
-    "message": "History updated",
+    "message": "History found",
     "body": [
         {
             "_id": "5c7036e9f5359a327de204dc",
@@ -168,6 +167,43 @@ Modify history with new operator and change the result synchronously
             "operator": "plus",
             "result": 12,
             "createdIn": "2019-02-22T17:52:41.572Z",
+            "__v": 0
+        },
+        {
+            "_id": "5c703c23f5359a327de204de",
+            "numberOne": 8,
+            "numberTwo": 20,
+            "operator": "plus",
+            "result": 28,
+            "createdIn": "2019-02-22T18:14:59.188Z",
+            "__v": 0
+        }
+    ]
+}
+```
+
+`localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
+**After Result**<br />
+```json
+{
+    "message": "History updated",
+    "body": [
+        {
+            "_id": "5c7036e9f5359a327de204dc",
+            "numberOne": 6,
+            "numberTwo": 6,
+            "operator": "divide",
+            "result": 1,
+            "createdIn": "2019-02-22T17:52:41.572Z",
+            "__v": 0
+        },
+        {
+            "_id": "5c703c23f5359a327de204de",
+            "numberOne": 8,
+            "numberTwo": 20,
+            "operator": "divide",
+            "result": 0.4,
+            "createdIn": "2019-02-22T18:14:59.188Z",
             "__v": 0
         }
     ]

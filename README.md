@@ -63,12 +63,9 @@ The path route is : `http:localhost:${YOUR_PORT}/history`
 ### Read
 
 Get responding history based on requested parameters
-- **parameters**: (id: string, numberOne: number, numberTwo: number, operator: string, result: number)
-<br />
-- **HTTP request method**: `get`
-<br />
-- **Types of request**: `req.query`
-<br />
+- **parameters**: (id: string, numberOne: number, numberTwo: number, operator: string, result: number) <br />
+- **HTTP request method**: `get` <br />
+- **Types of request**: `req.query` <br />
 - **examples**: <br />
 
 *Using one parameter [id]*<br />

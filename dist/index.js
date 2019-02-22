@@ -6,17 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const body_parser_1 = __importDefault(require("body-parser"));
 require("dotenv/config");
 const express_1 = __importDefault(require("express"));
+const connection_1 = require("./connection");
+const historyRoutes_1 = require("./routes/historyRoutes");
 const app = express_1.default();
 const port = process.env.PORT; // default port to listen
 app.use(body_parser_1.default.urlencoded({ extended: false }));
 app.use(body_parser_1.default.json());
+connection_1.dbInit();
 // courses
-const hello_1 = require("./meeting/six/hello");
-// define a route handler for the default home page
-app.get('/', (req, res) => {
-    hello_1.helloEs5('HelloEs5 Binar');
-    hello_1.helloEs6('HelloEs6 Binar');
-});
+// define a route handler
+historyRoutes_1.historyRoutes(app);
 // start the Express server
 app.listen(port, () => {
     console.log(`server started at http://localhost:${port}`);

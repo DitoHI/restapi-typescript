@@ -1,20 +1,20 @@
 import bodyParser from 'body-parser';
 import 'dotenv/config';
 import express from 'express';
+import { dbInit } from './connection';
+import { historyRoutes } from './routes/historyRoutes';
 
 const app = express();
 const port = process.env.PORT; // default port to listen
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// courses
-import { helloEs5, helloEs6 } from './meeting/six/hello';
+dbInit();
 
-// define a route handler for the default home page
-app.get('/', (req, res) => {
-  helloEs5('HelloEs5 Binar');
-  helloEs6('HelloEs6 Binar');
-});
+// courses
+
+// define a route handler
+historyRoutes(app);
 
 // start the Express server
 app.listen(port, () => {

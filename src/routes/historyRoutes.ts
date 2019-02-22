@@ -4,7 +4,7 @@ import { historyModel } from "../schema/history";
 
 const historyRoutes = (app: Express) => {
 
-  app.route('/calculateHistory')
+  app.route('/history')
 
     .post((req, res) => {
       const a = parseInt(req.body.a, 10);

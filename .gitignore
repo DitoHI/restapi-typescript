@@ -98,5 +98,4 @@ src/meeting/six
 src/meeting/seven
 src/meeting/eight
 src/meeting/nine
-src/models/History.ts
-src/models/historyDao.ts
+src/models/

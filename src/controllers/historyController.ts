@@ -1,14 +1,5 @@
 import { calculator } from '../meeting/three/mult';
-import { HistoryDao } from '../models/history/historyDao';
 import { historyModel, IHistory } from '../schema/history';
-
-class HistoryController {
-  public historyDao: HistoryDao;
-
-  constructor(historyDao: HistoryDao) {
-    this.historyDao = historyDao;
-  }
-}
 
 const addHistory = (numberOne: number, numberTwo: number, operator: string) => {
   const result = calculator(numberOne, numberTwo, operator);
@@ -18,7 +9,7 @@ const addHistory = (numberOne: number, numberTwo: number, operator: string) => {
       numberOne,
       numberTwo,
       operator,
-      result: result,
+      result,
       createdIn: Date.now(),
     });
     newHistory.save((err, history) => {

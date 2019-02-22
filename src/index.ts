@@ -9,9 +9,8 @@ const port = process.env.PORT; // default port to listen
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// init database connection
 dbInit();
-
-// courses
 
 // define a route handler
 historyRoutes(app);

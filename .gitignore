@@ -79,5 +79,22 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Typescript outDir
+dist/
+
 # custom
-.idea/
+# .idea/
+
+# custom only for code Challenge
+# week one
+src/client/
+src/config/
+src/config/
+src/meeting/two
+src/meeting/four
+src/meeting/five
+src/meeting/six
+src/meeting/seven
+src/meeting/eight
+src/models/History.ts
+src/models/historyDao.ts

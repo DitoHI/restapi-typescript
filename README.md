@@ -155,6 +155,7 @@ Modify history with new operator and change the result synchronously
 - **examples**: <br />
 
 `localhost:8080/history?operator=plus` <br />
+
 **Before Result**<br />
 ```json
 {
@@ -183,6 +184,7 @@ Modify history with new operator and change the result synchronously
 ```
 
 `localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
+
 **After Result**<br />
 ```json
 {

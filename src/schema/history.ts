@@ -1,5 +1,13 @@
 import mongoose from 'mongoose';
 
+interface IHistory {
+  numberOne: number;
+  numberTwo: number;
+  operator: string;
+  result: number;
+  createdIn: Date;
+}
+
 const historySchema = new mongoose.Schema({
   numberOne: Number,
   numberTwo: Number,
@@ -10,4 +18,4 @@ const historySchema = new mongoose.Schema({
 
 const historyModel = mongoose.model('History', historySchema);
 
-export { historyModel };
+export { IHistory, historyModel };

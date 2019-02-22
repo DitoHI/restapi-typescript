@@ -1,6 +1,6 @@
-import { Express } from "express";
-import { calculator } from "../meeting/three/mult";
-import { historyModel } from "../schema/history";
+import { Express } from 'express';
+import mongoose from 'mongoose';
+import * as historyController from '../controllers/historyController';
 
 const historyRoutes = (app: Express) => {
 
@@ -10,67 +10,23 @@ const historyRoutes = (app: Express) => {
       const a = parseInt(req.body.a, 10);
       const b = parseInt(req.body.b, 10);
       const operator = req.body.operator;
-      const result = calculator(a, b, operator);
 
-      // save to history of calculation
-      const newHistory = new historyModel({
-        createdIn: Date.now(),
-        numberOne: a,
-        numberTwo: b,
-        operator: operator,
-        result: result
-      });
-
-      newHistory.save((err, history) => {
-        if (err) {
-          res.status(408).json({
-            message: err,
-          });
-        } else {
-          res.status(200).json({
-            message: 'Successful saving',
-            body: history,
-          });
-        }
-      });
+      return historyController
+        .addHistory(a, b, operator).then(([statusCode, messageLog, history]) => {
+          return res.status(statusCode).send(history);
+        });
     })
 
     .get((req, res) => {
-      let a = null;
-      let b = null;
-      let operator = null;
-      let result = null;
-      if (req.body.a != null) {
-        a = parseInt(req.body.a,10);
-      }
-      if (req.body.b != null) {
-        b = parseInt(req.body.b, 10);
-      }
-      if (req.body.operator != null) {
-        operator = req.body.operator;
-      }
-      if (req.body.result != null) {
-        result = req.body.result;
-      }
-      const findHistory: { [k: string]: any } = {};
-      a != null ? findHistory.numberOne = a : null;
-      b != null ? findHistory.numberTwo = b : null;
-      operator != null ? findHistory.operator = operator : null;
-      result != null ? findHistory.result = a : null;
-      
-      historyModel.find(findHistory).exec((err, history) => {
-        if (err) {
-          res.status(408).json({
-            message: err,
-          });
-        } else {
-          res.status(200).json({
-            message: 'Successful find',
-            body: history,
-          });
-        }
-      })
-    })
+      const a = req.query.a !== undefined ? parseInt(req.query.a, 10) : null;
+      const b = req.query.b !== undefined ? parseInt(req.query.b, 10) : null;
+      const operator = req.query.operator;
+      const result = req.query.result !== undefined ? parseInt(req.query.result, 10) : null;
+      return historyController
+        .getHistory(a, b, operator, result).then(([statusCode, messageLog, history]) => {
+          return res.status(statusCode).send(history);
+        });
+    });
 };
 
 export { historyRoutes };

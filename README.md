@@ -185,7 +185,7 @@ Modify history with new operator and change the result synchronously
 
 `localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
 
-**After Result** with Method GET request <br />
+**After Result** with Method PUT request <br />
 ```json
 {
     "message": "History updated",

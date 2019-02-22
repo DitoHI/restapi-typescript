@@ -83,7 +83,8 @@ typings/
 dist/
 
 # custom
-# .idea/
+.idea/
+.env
 
 # custom only for code Challenge
 # week one

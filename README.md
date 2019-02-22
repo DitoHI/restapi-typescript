@@ -112,12 +112,9 @@ Get responding history based on requested parameters
 ### Create
 
 Create the new history while doing calculation. Date value is automatically assigned as `Date.now()`
-- **parameters**: (numberOne: number!, numberTwo: number!, operator: string!)
-<br />
-- **HTTP request method**: `post`
-<br />
-- **Types of request**: `req.body`
-<br />
+- **parameters**: (numberOne: number!, numberTwo: number!, operator: string!) <br />
+- **HTTP request method**: `post` <br />
+- **Types of request**: `req.body` <br />
 - **examples**: <br />
 `localhost:8080/history` <br />
 `
@@ -149,12 +146,9 @@ Create the new history while doing calculation. Date value is automatically assi
 ### Update
 
 Modify history with new operator and change the result synchronously
-- **parameters**: (operator: string!, operatorChanged: string!)
-<br />
-- **HTTP request method**: `put`
-<br />
-- **Types of request**: `req.query`
-<br />
+- **parameters**: (operator: string!, operatorChanged: string!) <br />
+- **HTTP request method**: `put` <br />
+- **Types of request**: `req.query` <br />
 - **examples**: <br />
 `localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
 
@@ -180,12 +174,9 @@ Modify history with new operator and change the result synchronously
 ### Delete
 
 Delete single or multiple histories based on the request parameters
-- **parameters**: (id: string, numberOne: number, numberTwo: number, operator: string, result: number)
-<br />
-- **HTTP request method**: `get`
-<br />
-- **Types of request**: `req.query`
-<br />
+- **parameters**: (id: string, numberOne: number, numberTwo: number, operator: string, result: number) <br />
+- **HTTP request method**: `get` <br />
+- **Types of request**: `req.query` <br />
 - **examples**: <br />
 
 *Using one parameter [id]*<br />

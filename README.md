@@ -154,7 +154,7 @@ Modify history with new operator and change the result synchronously
 - **Types of request**: `req.query` <br />
 - **examples**: <br />
 
-`localhost:8080/history?operator=plus` <br />
+`localhost:8080/history?operator=plus` with Method GET request <br />
 
 **Before Result**<br />
 ```json
@@ -185,7 +185,7 @@ Modify history with new operator and change the result synchronously
 
 `localhost:8080/history?operator=multiply&operatorChanged=plus` <br />
 
-**After Result**<br />
+**After Result** with Method GET request <br />
 ```json
 {
     "message": "History updated",

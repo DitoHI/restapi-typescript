@@ -13,4 +13,4 @@ const dbInit = () => {
   });
 };
 
-export { db, dbInit };
+export { dbInit };

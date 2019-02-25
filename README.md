@@ -72,7 +72,7 @@ Get responding history based on requested parameters
 - **examples**: <br />
 
 *Using one parameter [id]*<br />
-`localhost:8080/history?id=5c703257be10422efbc0640a` <br />
+`localhost:8080/history/read?id=5c703257be10422efbc0640a` <br />
 
 **Result**<br />
 ```json
@@ -92,7 +92,7 @@ Get responding history based on requested parameters
 }
 ```
 *Using two parameters [a, operator]*<br />
-`localhost:8080/history?a=3&operator=plus` <br />
+`localhost:8080/history/read?a=3&operator=plus` <br />
 
 **Result**<br />
 ```json
@@ -119,7 +119,7 @@ Create the new history while doing calculation. Date value is automatically assi
 - **HTTP request method**: `post` <br />
 - **Types of request**: `req.body` <br />
 - **examples**: <br />
-`localhost:8080/history` <br />
+`localhost:8080/history/create` <br />
 `
 {
 	"a": 8,
@@ -154,7 +154,7 @@ Modify history with new operator and change the result synchronously
 - **Types of request**: `req.query` <br />
 - **examples**: <br />
 
-`localhost:8080/history?operator=plus` with Method GET request <br />
+`localhost:8080/history/update?operator=plus` with Method GET request <br />
 
 **Before Result**<br />
 ```json
@@ -183,7 +183,7 @@ Modify history with new operator and change the result synchronously
 }
 ```
 
-`localhost:8080/history?operator=plus&operatorChanged=divide` with Method PUT request <br />
+`localhost:8080/history/update?operator=plus&operatorChanged=divide` with Method PUT request <br />
 
 **After Result** <br />
 ```json
@@ -221,21 +221,45 @@ Delete single or multiple histories based on the request parameters
 - **examples**: <br />
 
 *Using one parameter [id]*<br />
-`localhost:8080/history?id=5c703257be10422efbc0640a` <br />
+`localhost:8080/api/history/delete?operator=minus` <br />
 
 **Result**<br />
 ```json
 {
-    "message": "History deleted"
+    "status": 200,
+    "message": "History deleted",
+    "body": [
+        {
+            "_id": "5c7033b9de43a331ff389ae9",
+            "operator": "minus",
+            "result": -7,
+            "numberOne": 5,
+            "numberTwo": 12,
+            "createdIn": "2019-02-22T17:39:05.689Z",
+            "__v": 0
+        }
+    ]
 }
 ```
 *Using two parameters [b, operator]*<br />
-`localhost:8080/history?b=12&operator=minus` <br />
+`localhost:8080/api/history/delete?result=15&operator=plus` <br />
 
 **Result**<br />
 ```json
 {
-    "message": "History deleted"
+    "status": 200,
+    "message": "History deleted",
+    "body": [
+        {
+            "_id": "5c73c66274d36a1a1ee65a4a",
+            "operator": "plus",
+            "result": 15,
+            "numberOne": 3,
+            "numberTwo": 12,
+            "createdIn": "2019-02-25T10:41:38.307Z",
+            "__v": 0
+        }
+    ]
 }
 ```
 

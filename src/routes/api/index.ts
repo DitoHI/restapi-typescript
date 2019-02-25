@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { historyRouters } from './historyRoutes';
+import { historyRouters } from './histories/historyRoutes';
 
 const apiRouter = Router();
 apiRouter.use('/history', historyRouters);

@@ -1,4 +1,3 @@
-import { find } from 'tslint/lib/utils';
 import { calculator } from '../meeting/three/mult';
 import { historyModel, IHistory } from '../schema/history';
 

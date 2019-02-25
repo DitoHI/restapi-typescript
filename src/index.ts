@@ -1,19 +1,18 @@
-import bodyParser from 'body-parser';
 import 'dotenv/config';
 import express from 'express';
 import { dbInit } from './connection';
-import { historyRoutes } from './routes/historyRoutes';
+import { router } from './routes';
 
 const app = express();
 const port = process.env.PORT; // default port to listen
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // init database connection
 dbInit();
 
 // define a route handler
-historyRoutes(app);
+app.use(router);
 
 // start the Express server
 app.listen(port, () => {

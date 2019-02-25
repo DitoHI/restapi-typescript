@@ -1,3 +1,4 @@
+import { find } from 'tslint/lib/utils';
 import { calculator } from '../meeting/three/mult';
 import { historyModel, IHistory } from '../schema/history';
 
@@ -27,32 +28,78 @@ const addHistory = (numberOne: number, numberTwo: number, operator: string) => {
   });
 };
 
-const getHistory = (id: number, numberOne: number, numberTwo: number, operator: string, result: number) => {
+const getHistory = (req: any, res: any) => {
+
+  const id = req.query.id;
+
+  const a = req.query.a !== undefined
+    ? parseInt(req.query.a, 10)
+    : null;
+
+  const b = req.query.b !== undefined
+    ? parseInt(req.query.b, 10)
+    : null;
+
+  const operator = req.query.operator;
+
+  const result = req.query.result !== undefined
+    ? parseInt(req.query.result, 10)
+    : null;
+
   const findHistory: { [k: string]: any } = {};
-  id != null ? findHistory._id = id : null;
-  numberOne != null ? findHistory.numberOne = numberOne : null;
-  numberTwo != null ? findHistory.numberTwo = numberTwo : null;
-  operator != null ? findHistory.operator = operator : null;
-  result != null ? findHistory.result = result : null;
-  return new Promise((resolve) => {
-    historyModel.find(findHistory, (err, output: any) => {
-      let statusCode: number = 0;
-      let messageLog: string = '';
-      if (err) {
-        statusCode = 400;
-        messageLog = 'Failed finding at MongoDB';
-      } else {
-        const histories = output as IHistory[];
-        if (histories.length === 0) {
-          statusCode = 404;
-          messageLog = 'No history found';
-        } else {
-          statusCode = 200;
-          messageLog = 'History found';
-        }
-      }
-      resolve([statusCode, messageLog, output]);
+
+  id != null
+    ? findHistory._id = id
+    : null;
+
+  a != null
+    ? findHistory.numberOne = a
+    : null;
+
+  b != null
+    ? findHistory.numberTwo = b
+    : null;
+
+  operator != null
+    ? findHistory.operator = operator
+    : null;
+
+  result != null
+    ? findHistory.result = result
+    : null;
+
+  historyModel.find(findHistory, (err, output: any) => {
+    let statusCode: number = 0;
+    let messageLog: string = '';
+    if (err) {
+      statusCode = 400;
+      messageLog = 'Failed finding at MongoDB';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog,
+        body: null,
+      });
+    }
+
+    const histories = output as IHistory[];
+    if (histories.length === 0) {
+      statusCode = 404;
+      messageLog = 'No history found';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog,
+        body: null,
+      });
+    }
+
+    statusCode = 200;
+    messageLog = 'History found';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog,
+      body: histories,
     });
+
   });
 };
 

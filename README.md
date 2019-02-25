@@ -10,10 +10,10 @@ Calculator and Saving its histories. This simple api with get your request in th
 - Delete 
 
 ### Structure of Directory
-- controllers: define specified functions based on request
+- controllers: define specified functions based on request *(deprecated)*
 - meeting: library `calculator.ts` there
 - models: define Schema and Interface for History
-- routes: define routes with the same path `/history` with the differentiated of routing method
+- routes: define routes with the same path `/history` with the differentiated of routing method and Controller function inside the API
 
 ### Prerequisites
 This sample project runs on private environment. It is made to protect the privacy of maintainer. You just can change the variable `process.env` in this project to your static environment

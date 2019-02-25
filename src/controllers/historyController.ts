@@ -164,12 +164,15 @@ const updateHistory = (req: any, res: any) => {
 };
 
 const deleteHistory = (req: any, res: any) => {
+  let statusCode: number = 0;
+  let messageLog: string = '';
+
   if (req.query.a == null
     && req.query.b == null
     && req.query.operator == null
     && req.query.result == null) {
-    const statusCode = 400;
-    const messageLog = 'No request found';
+    statusCode = 400;
+    messageLog = 'No request found';
     return res.status(statusCode).json({
       status: statusCode,
       message: messageLog
@@ -214,27 +217,39 @@ const deleteHistory = (req: any, res: any) => {
     ? findHistory.result = result
     : null;
 
-  console.log(findHistory);
+  historyModel.find(findHistory, (err, output: any) => {
+    const histories = output as IHistory[];
+    if (histories.length === 0) {
+      statusCode = 400;
+      messageLog = 'No history found';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
 
-  // historyModel.deleteMany(findHistory, (err) => {
-  //   let statusCode: number = 0;
-  //   let messageLog: string = '';
-  //   if (err) {
-  //     statusCode = 400;
-  //     messageLog = 'Failed deleting at MongoDB';
-  //     return res.status(statusCode).json({
-  //       status: statusCode,
-  //       message: messageLog
-  //     });
-  //   }
-  //   statusCode = 200;
-  //   messageLog = 'History deleted';
-  //   return res.status(statusCode).json({
-  //     status: statusCode,
-  //     message: messageLog
-  //   });
-  //
-  // });
+    const historiesClone = histories.slice();
+    historiesClone.map(async (history) => {
+      historyModel.deleteOne({ _id: history._id }, (errChild) => {
+        if (errChild) {
+          statusCode = 400;
+          messageLog = 'Failed deleting at MongoDB';
+          return res.status(statusCode).json({
+            status: statusCode,
+            message: messageLog
+          });
+        }
+      });
+    });
+
+    statusCode = 200;
+    messageLog = 'History deleted';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog,
+      body: historiesClone
+    });
+  });
 };
 
 export { addHistory, getHistory, updateHistory, deleteHistory };

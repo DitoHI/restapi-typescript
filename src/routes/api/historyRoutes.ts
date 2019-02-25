@@ -1,80 +1,27 @@
 import { Express, Router } from 'express';
 import * as historyController from '../../controllers/historyController';
-import { IHistory } from '../../schema/history';
 
 const historyRouters = Router();
-historyRouters.get('/show', (req, res) => {
+
+historyRouters.get('/read', (req, res) => {
   historyController.getHistory(req, res);
 });
 
-// historyRouters.get('/show', (req, res) =>  {
-//   const id = req.query.id;
-//
-//   const a = req.query.a !== undefined
-//     ? parseInt(req.query.a, 10)
-//     : null;
-//
-//   const b = req.query.b !== undefined
-//     ? parseInt(req.query.b, 10)
-//     : null;
-//
-//   const operator = req.query.operator;
-//
-//   const result = req.query.result !== undefined
-//     ? parseInt(req.query.result, 10)
-//     : null;
+historyRouters.post('/create', (req, res) => {
+  historyController.addHistory(req, res);
+});
 
-  // return historyController
-  //   .getHistory(id, a, b, operator, result).then(([statusCode, messageLog, histories]) => {
-  //     const historyParsed = histories as IHistory[];
-  //     return res.status(statusCode).json({
-  //       message: messageLog,
-  //       body: historyParsed.length !== 0 ? historyParsed : null,
-  //     });
-  //   });
+historyRouters.put('/update', (req, res) => {
+  historyController.updateHistory(req, res);
+});
 
-// });
+historyRouters.delete('/delete', (req, res) => {
+  historyController.deleteHistory(req, res);
+});
 
 const historyRoutes = (app: Express) => {
 
   app.route('/history')
-
-    .post((req, res) => {
-      if (!req.body.a || !req.body.b || !req.body.operator) {
-        res.status(400).json({
-          message: 'No request found',
-          body: null,
-        });
-      }
-
-      if (req.body.a && req.body.b && req.body.operator) {
-        const a = parseInt(req.body.a, 10);
-        const b = parseInt(req.body.b, 10);
-        const operator = req.body.operator;
-        return historyController
-          .addHistory(a, b, operator).then(([statusCode, messageLog, history]) => {
-            return res.status(statusCode).json({
-              message: messageLog,
-              body: history,
-            });
-          });
-      }
-    })
-
-    .get((req, res) => historyController.getHistory(req, res));
-
-    // .put((req, res) => {
-    //   const { operator, operatorChanged } = req.query;
-    //   return historyController
-    //     .updateHistory(operator, operatorChanged)
-    //     .then(([statusCode, messageLog, histories]) => {
-    //       const historyParsed = histories as IHistory[];
-    //       return res.status(statusCode).json({
-    //         message: messageLog,
-    //         body: historyParsed.length !== 0 ? histories : null,
-    //       });
-    //     });
-    // })
 
     // .delete((req, res) => {
     //   const id = req.query.id;

@@ -84,7 +84,6 @@ dist/
 
 # custom
 .idea/
-.env
 
 # custom only for code Challenge
 # week one

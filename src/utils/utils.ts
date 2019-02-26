@@ -11,7 +11,6 @@ const loadCollection = (colName: string, db: lokijs): Promise<lokijs.Collection<
 };
 
 const imageFilter = (req: any, file: any, cb: any) => {
-  // accept image only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
     return cb(new Error('Only image files are allowed!'), false);
   }
@@ -20,10 +19,10 @@ const imageFilter = (req: any, file: any, cb: any) => {
 
 const storage = multer.diskStorage({
   destination: ((req, file, callback) => {
-    callback(null, 'src/uploads/');
+    callback(null, 'public');
   }),
   filename: ((req, file, callback) => {
-    callback(null, `${file.fieldname} - ${Date.now()}.png`);
+    callback(null, `${file.originalname} - ${Date.now()}.png`);
   })
 });
 

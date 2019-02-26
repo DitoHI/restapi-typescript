@@ -1,5 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { userModel } from '../../../schema';
+import { UploadActivity } from '../../../utils/constant';
+import { loadCollection } from '../../../utils/utils';
 
 const addUser = async (req: any, res: any) => {
   if (!req.body.name || !req.body.username || !req.body.email || !req.body.password) {
@@ -40,4 +42,21 @@ const addUser = async (req: any, res: any) => {
   });
 };
 
-export { addUser }
+const uploadProfile = async (req: any, res: any, db: any) => {
+  if (req.file == null) {
+    return res.status(400).json({
+      message: 'Please at least upload an image'
+    });
+  }
+
+  const collectionName = process.env.COLLECTION_NAME;
+  const profileColumn = await loadCollection(collectionName, db);
+  const profileData = profileColumn.insert(req.file);
+  db.saveDatabase();
+  return res.status(200).json({
+    message: 'Upload success',
+    body: profileData.originalname
+  });
+};
+
+export { addUser, uploadProfile };

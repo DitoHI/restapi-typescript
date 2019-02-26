@@ -1,5 +1,5 @@
 import { calculator } from '../../../meeting/three/mult';
-import { historyModel, IHistory } from '../../../schema/history';
+import { historyModel, IHistory } from '../../../schema';
 
 const addHistory = (req: any, res: any) => {
   if (!req.body.a || !req.body.b || !req.body.operator) {

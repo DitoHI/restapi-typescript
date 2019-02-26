@@ -1,3 +1,4 @@
+import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import { dbInit } from './connection';
@@ -7,6 +8,7 @@ const app = express();
 const port = process.env.PORT; // default port to listen
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 // init database connection
 dbInit();

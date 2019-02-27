@@ -1,6 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { userModel } from '../../../schema';
-import { UploadActivity } from '../../../utils/constant';
+import { IUser, userModel } from '../../../schema';
 import { loadCollection } from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
@@ -28,7 +27,7 @@ const addUser = async (req: any, res: any, db: any) => {
     username,
     email,
     password,
-    imgProfile: pathImgProfile,
+    userProfile: pathImgProfile,
   });
   newUser.save((err, user) => {
     let statusCode: number = 0;
@@ -51,6 +50,209 @@ const addUser = async (req: any, res: any, db: any) => {
   });
 };
 
+const getUser = (req: any, res: any) => {
+
+  const id = req.query.id;
+
+  const name = req.query.name;
+
+  const username = req.query.username;
+
+  const operator = req.query.operator;
+
+  const password = req.query.password;
+
+  const isActived = req.query.isActived;
+
+  const findUser: { [k: string]: any } = {};
+
+  id != null
+    ? findUser._id = id
+    : null;
+
+  name != null
+    ? findUser.name = name
+    : null;
+
+  username != null
+    ? findUser.username = username
+    : null;
+
+  isActived != null
+    ? findUser.isActived = isActived
+    : null;
+
+  userModel.find(findUser, async (err, output: any) => {
+    let statusCode: number = 0;
+    let messageLog: string = '';
+    if (err) {
+      statusCode = 400;
+      messageLog = 'Failed finding at MongoDB';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+
+    const users = output as IUser[];
+    if (users.length === 0) {
+      statusCode = 404;
+      messageLog = 'No user found';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+
+    if (password != null) {
+      const valid = await bcrypt.compare(password, users[0].password);
+      if (!valid) {
+        statusCode = 404;
+        messageLog = 'Please check your password';
+        return res.status(statusCode).json({
+          status: statusCode,
+          message: messageLog
+        });
+      }
+    }
+
+    statusCode = 200;
+    messageLog = 'User found';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog,
+      body: users,
+    });
+
+  });
+};
+
+const updateUser = (req: any, res: any) => {
+  const username = req.body.username;
+
+  const email = req.body.email;
+
+  const password = req.body.password;
+
+  const newUsername = req.body.newUsername;
+
+  const newEmail = req.body.newEmail;
+
+  const newPassword = req.body.newPassword;
+
+  const findUser: { [k: string]: any } = {};
+
+  email != null
+    ? findUser.email = email
+    : null;
+
+  username != null
+    ? findUser.username = username
+    : null;
+
+  // check if value wants to be updated
+  // and the new value already inputted
+  let statusCode: number = 0;
+  let messageLog: string = '';
+
+  if (email != null && newEmail == null) {
+    statusCode = 400;
+    messageLog = 'Please fill the new email you want to update';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog
+    });
+  }
+
+  if (username != null && newUsername == null) {
+    statusCode = 400;
+    messageLog = 'Please fill the new username you want to update';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog
+    });
+  }
+
+  userModel.find(findUser, async (err, output: any) => {
+    statusCode = 400;
+    messageLog = 'Error finding user';
+    if (err) {
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+    const users = (output as IUser[]).slice();
+    if (users.length === 0) {
+      statusCode = 404;
+      messageLog = 'No user found';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+
+    if (password != null) {
+      if (newPassword == null) {
+        statusCode = 400;
+        messageLog = 'Please fill the new password you want to update';
+        return res.status(statusCode).json({
+          status: statusCode,
+          message: messageLog
+        });
+      }
+
+      const valid = await bcrypt.compare(password, users[0].password);
+      if (!valid) {
+        statusCode = 404;
+        messageLog = 'Please check your password';
+        return res.status(statusCode).json({
+          status: statusCode,
+          message: messageLog
+        });
+      }
+      findUser.password = password;
+    }
+
+    statusCode = 307;
+    messageLog = 'User updated';
+    const userChanged = users.slice(0, 1)[0];
+
+    const newUser: { [k: string]: any } = {};
+
+    newEmail != null
+      ? newUser.user = newEmail
+      : null;
+
+    newUsername != null
+      ? newUser.username = newUsername
+      : null;
+
+    newPassword != null
+      ? newUser.password = newPassword
+      : null;
+
+    console.log(newUser);
+    userModel.findByIdAndUpdate(userChanged._id, newUser, (errChild, outputChild: any) => {
+      if (err) {
+        messageLog = `Failed updating user[_id: ${userChanged._id}]`;
+        statusCode = 403;
+        return res.status(statusCode).json({
+          status: statusCode,
+          message: messageLog
+        });
+      }
+    });
+
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog,
+      body: newUser
+    });
+
+  });
+};
+
 const uploadProfile = async (req: any, res: any, db: any) => {
   if (req.file == null) {
     return res.status(400).json({
@@ -66,4 +268,4 @@ const uploadProfile = async (req: any, res: any, db: any) => {
   });
 };
 
-export { addUser, uploadProfile };
+export { addUser, uploadProfile, getUser, updateUser };

@@ -20,4 +20,12 @@ userRoutes.post('/upload', upload.single('avatar'), async (req, res) => {
   userController.uploadProfile(req, res, db);
 });
 
+userRoutes.get('/read', (req, res) => {
+  userController.getUser(req, res);
+});
+
+userRoutes.put('/update', (req, res) => {
+  userController.updateUser(req, res);
+});
+
 export { userRoutes };

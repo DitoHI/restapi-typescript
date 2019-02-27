@@ -8,9 +8,11 @@ const UPLOAD_PATH = 'public';
 class UploadActivity {
   public upload: any;
   public db: any;
+  public path: string;
 
   constructor(path: string) {
-    this.upload = multer({ storage, dest: `${UPLOAD_PATH}/${path}`, fileFilter: imageFilter });
+    this.path = `${UPLOAD_PATH}/${path}`;
+    this.upload = multer({ storage, dest: this.path, fileFilter: imageFilter });
     this.db = new lokijs(`${UPLOAD_PATH}/${path}.json`, { persistenceMethod: 'fs' });
   }
 }

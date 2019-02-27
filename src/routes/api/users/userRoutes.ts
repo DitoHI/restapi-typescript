@@ -12,8 +12,8 @@ const uploadActivity = new UploadActivity('user');
 const upload = uploadActivity.upload;
 const db = uploadActivity.db;
 
-userRoutes.post('/create', (req, res) => {
-  userController.addUser(req, res);
+userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
+  userController.addUser(req, res, db);
 });
 
 userRoutes.post('/upload', upload.single('avatar'), async (req, res) => {

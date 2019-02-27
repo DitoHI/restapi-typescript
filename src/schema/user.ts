@@ -6,6 +6,8 @@ interface IUser {
   username: string;
   email: string;
   password: string;
+  isActived: boolean;
+  userProfile: string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -14,6 +16,7 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String,
   isActived: { type: Boolean, default: true },
+  userProfile: { required: false, type: String, default: null }
 });
 
 const userModel = mongoose.model('Users', userSchema);

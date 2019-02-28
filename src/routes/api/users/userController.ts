@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { IUser, userModel } from '../../../schema';
+import { historyModel, IHistory, IUser, userModel } from '../../../schema';
 import { loadCollection } from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
@@ -232,7 +232,6 @@ const updateUser = (req: any, res: any) => {
       ? newUser.password = newPassword
       : null;
 
-    console.log(newUser);
     userModel.findByIdAndUpdate(userChanged._id, newUser, (errChild, outputChild: any) => {
       if (err) {
         messageLog = `Failed updating user[_id: ${userChanged._id}]`;
@@ -253,6 +252,82 @@ const updateUser = (req: any, res: any) => {
   });
 };
 
+const deleteUser = (req: any, res: any) => {
+  let statusCode: number = 0;
+  let messageLog: string = '';
+
+  if ((req.body.username == null && req.body.password == null)
+    || (req.query.email == null && req.body.password == null)
+  ) {
+    statusCode = 400;
+    messageLog = 'Please fill the form';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog
+    });
+  }
+
+  const username = req.body.username;
+
+  const email = req.body.email;
+
+  const password = req.body.password;
+
+  const findUser: { [k: string]: any } = {};
+
+  username != null
+    ? findUser.username = username
+    : null;
+
+  email != null
+    ? findUser.email = email
+    : null;
+
+  userModel.find(findUser, async (err, output: any) => {
+    const users = output as IUser[];
+    if (users.length === 0) {
+      statusCode = 400;
+      messageLog = 'No user found';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+
+    const valid = await bcrypt.compare(password, users[0].password);
+    if (!valid) {
+      statusCode = 404;
+      messageLog = 'Please check your password';
+      return res.status(statusCode).json({
+        status: statusCode,
+        message: messageLog
+      });
+    }
+
+    const usersClone = users.slice();
+    usersClone.map(async (user) => {
+      userModel.deleteOne({ _id: user._id }, (errChild) => {
+        if (errChild) {
+          statusCode = 400;
+          messageLog = 'Failed deleting at MongoDB';
+          return res.status(statusCode).json({
+            status: statusCode,
+            message: messageLog
+          });
+        }
+      });
+    });
+
+    statusCode = 200;
+    messageLog = 'User deleted';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog,
+      body: usersClone
+    });
+  });
+};
+
 const uploadProfile = async (req: any, res: any, db: any) => {
   if (req.file == null) {
     return res.status(400).json({
@@ -268,4 +343,4 @@ const uploadProfile = async (req: any, res: any, db: any) => {
   });
 };
 
-export { addUser, uploadProfile, getUser, updateUser };
+export { addUser, uploadProfile, getUser, updateUser, deleteUser };

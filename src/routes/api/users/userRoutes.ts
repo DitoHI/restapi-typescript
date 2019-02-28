@@ -28,4 +28,8 @@ userRoutes.put('/update', (req, res) => {
   userController.updateUser(req, res);
 });
 
+userRoutes.delete('/delete', (req, res) => {
+  userController.deleteUser(req, res);
+});
+
 export { userRoutes };

@@ -1,4 +1,6 @@
+import fs, { unlink } from 'fs';
 import lokijs from 'lokijs';
+import moment from 'moment';
 import * as multer from 'multer';
 
 const loadCollection = (colName: string, db: lokijs): Promise<lokijs.Collection<any>> => {
@@ -19,11 +21,44 @@ const imageFilter = (req: any, file: any, cb: any) => {
 
 const storage = multer.diskStorage({
   destination: ((req, file, callback) => {
-    callback(null, 'public');
+    callback(null, 'public/user/photos/new');
   }),
-  filename: ((req, file, callback) => {
-    callback(null, `${file.originalname} - ${Date.now()}.png`);
+  filename: ((req: any, file, callback) => {
+    callback(null, `${req.body.username}-${moment().format('DDMMYYYY')}.png`);
   })
 });
 
-export { imageFilter, loadCollection, storage };
+const move = (oldPath: string, newPath: string) => {
+  fs.rename(oldPath, newPath, (err) => {
+    return new Promise((resolve) => {
+      fs.unlink(oldPath, (errChild) => resolve(errChild));
+      if (err) {
+        if (err.code === 'EXDEV') {
+          return copy(oldPath, newPath);
+        }
+        return resolve(err);
+      }
+      return resolve(oldPath);
+    });
+  });
+};
+
+const copy = (oldPath: string, newPath: string) => {
+  const readStream = fs.createReadStream(oldPath);
+  const writeStream = fs.createWriteStream(newPath);
+
+  return new Promise((resolve) => {
+    readStream.on('error', (err) => resolve(err));
+    writeStream.on('error', (err) => resolve(err));
+
+    readStream.on('close', () => {
+      console.log(oldPath);
+      fs.unlink(oldPath, (err) => resolve(err));
+    });
+
+    readStream.pipe(writeStream);
+    resolve(newPath);
+  });
+};
+
+export { imageFilter, loadCollection, storage, move };

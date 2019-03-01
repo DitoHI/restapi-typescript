@@ -17,4 +17,7 @@ class UploadActivity {
   }
 }
 
-export { UploadActivity };
+const userOldPath = 'public/user/photos/new/';
+const userDeletedPath = 'public/user/photos/backup/';
+
+export { UploadActivity, userOldPath, userDeletedPath };

@@ -1,6 +1,9 @@
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import moment from 'moment';
 import { historyModel, IHistory, IUser, userModel } from '../../../schema';
-import { loadCollection } from '../../../utils/utils';
+import { userDeletedPath, userOldPath } from '../../../utils/constant';
+import { loadCollection, move } from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
 
@@ -15,11 +18,11 @@ const addUser = async (req: any, res: any, db: any) => {
   const username = req.body.username;
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, 10);
-  const pathImgProfile = req.file.path;
 
   // save to local by loki
   const profileColumn = await loadCollection(collectionName, db);
   const profileData = profileColumn.insert(req.file);
+  const userOriginalProfile = `${username}-${moment().format('DDMMYYYY')}.png`;
   db.saveDatabase();
 
   const newUser = new userModel({
@@ -27,7 +30,7 @@ const addUser = async (req: any, res: any, db: any) => {
     username,
     email,
     password,
-    userProfile: pathImgProfile,
+    userOriginalProfile,
   });
   newUser.save((err, user) => {
     let statusCode: number = 0;
@@ -51,18 +54,26 @@ const addUser = async (req: any, res: any, db: any) => {
 };
 
 const getUser = (req: any, res: any) => {
+  if ((req.body.name == null || req.body.username == null) && req.body.password == null) {
+    const statusCode = 400;
+    const messageLog = 'Please specify name, username, or password';
+    return res.status(statusCode).json({
+      status: statusCode,
+      message: messageLog
+    });
+  }
 
-  const id = req.query.id;
+  const id = req.body.id;
 
-  const name = req.query.name;
+  const name = req.body.name;
 
-  const username = req.query.username;
+  const username = req.body.username;
 
-  const operator = req.query.operator;
+  const operator = req.body.operator;
 
-  const password = req.query.password;
+  const password = req.body.password;
 
-  const isActived = req.query.isActived;
+  const isActived = req.body.isActived;
 
   const findUser: { [k: string]: any } = {};
 
@@ -116,9 +127,17 @@ const getUser = (req: any, res: any) => {
       }
     }
 
+    // save auth to token
+    const payload = {
+      username: users[0]
+    };
+    const secret = process.env.SECRET;
+    const token = jwt.sign(payload, secret);
+
     statusCode = 200;
     messageLog = 'User found';
     return res.status(statusCode).json({
+      token,
       status: statusCode,
       message: messageLog,
       body: users,
@@ -317,6 +336,12 @@ const deleteUser = (req: any, res: any) => {
         }
       });
     });
+
+    // backup the photo
+    // before deleted
+    const oldPath = `${userOldPath}${users[0].userOriginalProfile}`;
+    const newPath = `${userDeletedPath}${users[0].userOriginalProfile}`;
+    await move(oldPath, newPath);
 
     statusCode = 200;
     messageLog = 'User deleted';

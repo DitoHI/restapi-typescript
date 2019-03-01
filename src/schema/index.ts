@@ -1,4 +1,4 @@
-import { foodSchema } from './foods/food';
+import { foodSchema } from './food';
 import { historyModel, IHistory } from './history';
 import { IUser, userModel } from './user';
 

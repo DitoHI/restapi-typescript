@@ -193,9 +193,19 @@ const getUser = (req: any, res: any) => {
       }
     }
 
+    const user = users[0];
+    const payload = {
+      id: user._id,
+      name: user.username,
+    };
+    const token = jwt.sign(payload, secret, {
+      expiresIn: 86400 // 24 hours
+    });
+
     statusCode = 200;
     messageLog = 'User found';
     return res.status(statusCode).json({
+      token,
       status: statusCode,
       message: messageLog,
       body: users,

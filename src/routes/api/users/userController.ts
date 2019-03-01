@@ -9,12 +9,26 @@ const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
 
 const showToken = (req: any, res: any) => {
-  const statusCode = 200;
-  const message = 'Authenticate success';
-  return res.status(statusCode).json({
-    message,
-    status: statusCode,
-    body: req.decoded,
+  let statusCode = 200;
+  let message = 'Authenticate success';
+  const decoded = req.decoded;
+
+  userModel.findById(decoded.id, (err, output) => {
+    if (err)  {
+      statusCode = 403;
+      message = 'User not found';
+      return res.status(statusCode).json({
+        message,
+        status: statusCode,
+        body: output
+      });
+    }
+
+    return res.status(statusCode).json({
+      message,
+      status: statusCode,
+      body: output,
+    });
   });
 };
 

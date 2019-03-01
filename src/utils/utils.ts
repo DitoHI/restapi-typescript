@@ -2,6 +2,7 @@ import fs, { unlink } from 'fs';
 import lokijs from 'lokijs';
 import moment from 'moment';
 import * as multer from 'multer';
+import { userOldPath } from './constant';
 
 const loadCollection = (colName: string, db: lokijs): Promise<lokijs.Collection<any>> => {
   return new Promise((resolve) => {
@@ -19,18 +20,18 @@ const imageFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
 
-const destinationPath = 'public/user/photos/new/';
 const storage = multer.diskStorage({
   destination: ((req, file, callback) => {
-    callback(null, destinationPath);
+    callback(null, userOldPath);
   }),
   filename: ((req: any, file, callback) => {
-    
     if (req.body.username != null) {
-      callback(null, this.modifyImagetoLatest(req.body.username));
+      const fileName = this.modifyImagetoLatest(req.body.username);
+      callback(null, fileName);
     }
     if (req.user != null) {
-      callback(null, this.modifyImagetoLatest(req.user.username));
+      const fileName = this.modifyImagetoLatest(req.user.username);
+      callback(null, fileName);
     }
   })
 });
@@ -81,7 +82,7 @@ const deleteFile = (path: string) => {
 };
 
 const modifyImagetoLatest = (originalName: string) => {
-  return `${originalName}-${moment().format('DDMMYYYY')}.png`;
+  return `${originalName}_${moment().format('DDMMYYYY')}.png`;
 };
 
 export { deleteFile, imageFilter, loadCollection, storage, moveFile, modifyImagetoLatest };

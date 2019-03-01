@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { historyModel, IHistory, IUser, userModel } from '../../../schema';
@@ -420,6 +421,20 @@ const deleteUser = (req: any, res: any) => {
   });
 };
 
+const deleteImageProfile = (req: any, res: any, next: any) => {
+  const statusCode = 400;
+  const message = 'No token provided';
+  if (!req.user) {
+    return res.status(statusCode).json({
+      message
+    });
+  }
+  const imagePath = `${userOldPath}${req.user.userOriginalProfile}`;
+  deleteFile(imagePath).then(() => {
+    next();
+  });
+};
+
 const uploadProfile = async (req: any, res: any, db: any) => {
   let statusCode = 400;
   let message = 'Please at least upload an image';
@@ -448,7 +463,7 @@ const uploadProfile = async (req: any, res: any, db: any) => {
         message
       });
     }
-    
+
     statusCode = 200;
     message = 'Successfully updated';
     return res.status(statusCode).json({
@@ -467,6 +482,7 @@ export {
   , uploadProfile
   , getUser
   , updateUser
+  , deleteImageProfile
   , deleteUser
   , verifyToken
   , getUserFromToken

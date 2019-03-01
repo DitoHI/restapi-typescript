@@ -3,6 +3,7 @@ import fs from 'fs';
 import lokijs from 'lokijs';
 import multer from 'multer';
 import { UploadActivity } from '../../../utils/constant';
+import { deleteFile } from '../../../utils/utils';
 import * as userController from './userController';
 
 // testing
@@ -14,8 +15,10 @@ const uploadActivity = new UploadActivity('user');
 const upload = uploadActivity.upload;
 const db = uploadActivity.db;
 
-userRoutes.get('/me',  userController.verifyToken,
-               userController.getUserFromToken, (req: any, res) => {
+userRoutes.get('/me',
+               userController.verifyToken,
+               userController.getUserFromToken,
+               (req: any, res) => {
                  return res.status(req.status).json({
                    message: req.message,
                    body: req.user
@@ -26,8 +29,12 @@ userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
   userController.addUser(req, res, db);
 });
 
-userRoutes.post('/upload', userController.verifyToken,
-                userController.getUserFromToken, upload.single('avatar'), async (req, res) => {
+userRoutes.post('/upload',
+                userController.verifyToken,
+                userController.getUserFromToken,
+                userController.deleteImageProfile,
+                upload.single('avatar'),
+                async (req, res) => {
                   userController.uploadProfile(req, res, db);
                 });
 

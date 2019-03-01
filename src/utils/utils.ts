@@ -21,8 +21,10 @@ const imageFilter = (req: any, file: any, cb: any) => {
 };
 
 const storage = multer.diskStorage({
-  destination: ((req, file, callback) => {
-    callback(null, userOldPath);
+  destination: ((req: any, file, callback) => {
+    const newPath = `${userOldPath}${req.body.username}`;
+    makeDir(newPath);
+    callback(null, newPath);
   }),
   filename: ((req: any, file, callback) => {
     if (req.body.username != null) {
@@ -81,8 +83,14 @@ const deleteFile = (path: string) => {
   });
 };
 
+const makeDir = (path: string) => {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path);
+  }
+};
+
 const modifyImagetoLatest = (originalName: string) => {
   return `${originalName}_${moment().format('DDMMYYYY')}.png`;
 };
 
-export { deleteFile, imageFilter, loadCollection, storage, moveFile, modifyImagetoLatest };
+export { deleteFile, imageFilter, loadCollection, storage, makeDir, moveFile, modifyImagetoLatest };

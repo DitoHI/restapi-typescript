@@ -25,9 +25,11 @@ userRoutes.get('/me',
                  });
                });
 
-userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
-  userController.addUser(req, res, db);
-});
+userRoutes.post('/create',
+                upload.single('avatar'),
+                async (req, res) => {
+                  userController.addUser(req, res, db);
+                });
 
 userRoutes.post('/upload',
                 userController.verifyToken,

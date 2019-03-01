@@ -1,10 +1,15 @@
 import * as bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
-import moment from 'moment';
 import { historyModel, IHistory, IUser, userModel } from '../../../schema';
 import { userDeletedPath, userOldPath } from '../../../utils/constant';
-import { deleteFile, loadCollection, modifyImagetoLatest, moveFile } from '../../../utils/utils';
+import {
+  deleteFile
+  , loadCollection
+  , makeDir
+  , modifyImagetoLatest
+  , moveFile
+} from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
@@ -435,6 +440,24 @@ const deleteImageProfile = (req: any, res: any, next: any) => {
   });
 };
 
+const makeNewProfile = async (req: any, res: any, next: any) => {
+  let folderName = 'default';
+  const statusCode = 400;
+  console.log(req.body);
+  if (!req.body.username) {
+    const message = 'No access';
+    next();
+  }
+  if (req.user) {
+    folderName = req.user.username;
+  }
+  if (req.body.username) {
+    folderName = req.body.username;
+  }
+  makeDir(`${userOldPath}${folderName}`);
+  next();
+};
+
 const uploadProfile = async (req: any, res: any, db: any) => {
   let statusCode = 400;
   let message = 'Please at least upload an image';
@@ -481,6 +504,7 @@ export {
   addUser
   , uploadProfile
   , getUser
+  , makeNewProfile
   , updateUser
   , deleteImageProfile
   , deleteUser

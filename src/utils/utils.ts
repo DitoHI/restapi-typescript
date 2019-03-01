@@ -19,22 +19,29 @@ const imageFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
 
+const destinationPath = 'public/user/photos/new/';
 const storage = multer.diskStorage({
   destination: ((req, file, callback) => {
-    callback(null, 'public/user/photos/new');
+    callback(null, destinationPath);
   }),
   filename: ((req: any, file, callback) => {
-    callback(null, `${req.body.username}-${moment().format('DDMMYYYY')}.png`);
+    
+    if (req.body.username != null) {
+      callback(null, this.modifyImagetoLatest(req.body.username));
+    }
+    if (req.user != null) {
+      callback(null, this.modifyImagetoLatest(req.user.username));
+    }
   })
 });
 
-const move = (oldPath: string, newPath: string) => {
+const moveFile = (oldPath: string, newPath: string) => {
   fs.rename(oldPath, newPath, (err) => {
     return new Promise((resolve) => {
       fs.unlink(oldPath, (errChild) => resolve(errChild));
       if (err) {
         if (err.code === 'EXDEV') {
-          return copy(oldPath, newPath);
+          return copyFile(oldPath, newPath);
         }
         return resolve(err);
       }
@@ -43,7 +50,7 @@ const move = (oldPath: string, newPath: string) => {
   });
 };
 
-const copy = (oldPath: string, newPath: string) => {
+const copyFile = (oldPath: string, newPath: string) => {
   const readStream = fs.createReadStream(oldPath);
   const writeStream = fs.createWriteStream(newPath);
 
@@ -60,4 +67,21 @@ const copy = (oldPath: string, newPath: string) => {
   });
 };
 
-export { imageFilter, loadCollection, storage, move };
+const deleteFile = (path: string) => {
+  const readStream = fs.createReadStream(path);
+
+  return new Promise((resolve) => {
+    readStream.on('error', (err) => resolve(err));
+    readStream.on('close', () => {
+      fs.unlink(path, (err) => resolve(err));
+    });
+
+    resolve(path);
+  });
+};
+
+const modifyImagetoLatest = (originalName: string) => {
+  return `${originalName}-${moment().format('DDMMYYYY')}.png`;
+};
+
+export { deleteFile, imageFilter, loadCollection, storage, moveFile, modifyImagetoLatest };

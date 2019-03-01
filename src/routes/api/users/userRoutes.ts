@@ -26,9 +26,10 @@ userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
   userController.addUser(req, res, db);
 });
 
-userRoutes.post('/upload', upload.single('avatar'), async (req, res) => {
-  userController.uploadProfile(req, res, db);
-});
+userRoutes.post('/upload', userController.verifyToken,
+                userController.getUserFromToken, upload.single('avatar'), async (req, res) => {
+                  userController.uploadProfile(req, res, db);
+                });
 
 userRoutes.get('/login', (req, res) => {
   userController.getUser(req, res);

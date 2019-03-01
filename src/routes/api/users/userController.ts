@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { historyModel, IHistory, IUser, userModel } from '../../../schema';
 import { userDeletedPath, userOldPath } from '../../../utils/constant';
-import { loadCollection, move } from '../../../utils/utils';
+import { deleteFile, loadCollection, modifyImagetoLatest, moveFile } from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
@@ -77,7 +77,7 @@ const addUser = async (req: any, res: any, db: any) => {
   // save to local by loki
   const profileColumn = await loadCollection(collectionName, db);
   const profileData = profileColumn.insert(req.file);
-  const userOriginalProfile = `${username}-${moment().format('DDMMYYYY')}.png`;
+  const userOriginalProfile = modifyImagetoLatest(username);
   db.saveDatabase();
 
   const newUser = new userModel({
@@ -408,7 +408,7 @@ const deleteUser = (req: any, res: any) => {
     // before deleted
     const oldPath = `${userOldPath}${users[0].userOriginalProfile}`;
     const newPath = `${userDeletedPath}${users[0].userOriginalProfile}`;
-    await move(oldPath, newPath);
+    await moveFile(oldPath, newPath);
 
     statusCode = 200;
     messageLog = 'User deleted';
@@ -421,18 +421,45 @@ const deleteUser = (req: any, res: any) => {
 };
 
 const uploadProfile = async (req: any, res: any, db: any) => {
+  let statusCode = 400;
+  let message = 'Please at least upload an image';
   if (req.file == null) {
-    return res.status(400).json({
-      message: 'Please at least upload an image'
+    return res.status(statusCode).json({
+      message
     });
   }
+
+  // check if user is already
+  // logged in
+  if (!req.user) {
+    message = 'No token provided';
+    return res.status(statusCode).json({
+      message
+    });
+  }
+
+  const user = req.user as IUser;
+  const newImageProfile = modifyImagetoLatest(user.username);
+  const newImageObject = { userOriginalProfile: newImageProfile };
+  userModel.findByIdAndUpdate(user._id, newImageObject, (err, result) => {
+    if (err) {
+      message = 'Error updating profile';
+      return res.status(statusCode).json({
+        message
+      });
+    }
+    
+    statusCode = 200;
+    message = 'Successfully updated';
+    return res.status(statusCode).json({
+      message,
+      body: result
+    });
+  });
+
   const profileColumn = await loadCollection(collectionName, db);
   const profileData = profileColumn.insert(req.file);
   db.saveDatabase();
-  return res.status(200).json({
-    message: 'Upload success',
-    body: profileData.originalname
-  });
 };
 
 export {

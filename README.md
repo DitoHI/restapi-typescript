@@ -7,7 +7,7 @@
 * Atlas Cloud Mongodb
 
 ## Road Map Activity
-####Basic CRUD (done)
+#### Basic CRUD (done)
 Include:
 * Create Histories
 * Update Histories
@@ -16,7 +16,7 @@ Include:
 
 Check out the README for short introduction [here](list_readme/1_basic_crud/README.md)
 
-####Filesystem, JWT, & Bcrypt (done)
+#### Filesystem, JWT, & Bcrypt (done)
 Include:
 * Create users with automatically saving token to request
 * Check out the token with route `/me`

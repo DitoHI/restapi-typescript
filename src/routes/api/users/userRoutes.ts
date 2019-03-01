@@ -14,7 +14,13 @@ const uploadActivity = new UploadActivity('user');
 const upload = uploadActivity.upload;
 const db = uploadActivity.db;
 
-userRoutes.get('/me',  userController.verifyToken, userController.showToken);
+userRoutes.get('/me',  userController.verifyToken,
+               userController.getUserFromToken, (req: any, res) => {
+                 return res.status(req.status).json({
+                   message: req.message,
+                   body: req.user
+                 });
+               });
 
 userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
   userController.addUser(req, res, db);

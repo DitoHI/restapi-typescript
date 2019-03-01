@@ -8,7 +8,7 @@ import { loadCollection, move } from '../../../utils/utils';
 const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
 
-const showToken = (req: any, res: any) => {
+const getUserFromToken = (req: any, res: any, next: any) => {
   let statusCode = 200;
   let message = 'Authenticate success';
   const decoded = req.decoded;
@@ -24,11 +24,10 @@ const showToken = (req: any, res: any) => {
       });
     }
 
-    return res.status(statusCode).json({
-      message,
-      status: statusCode,
-      body: output,
-    });
+    req.status = statusCode;
+    req.message = message;
+    req.user = output;
+    next();
   });
 };
 
@@ -436,4 +435,12 @@ const uploadProfile = async (req: any, res: any, db: any) => {
   });
 };
 
-export { addUser, uploadProfile, getUser, updateUser, deleteUser, verifyToken, showToken };
+export {
+  addUser
+  , uploadProfile
+  , getUser
+  , updateUser
+  , deleteUser
+  , verifyToken
+  , getUserFromToken
+};

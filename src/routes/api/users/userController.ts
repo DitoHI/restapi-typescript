@@ -412,8 +412,8 @@ const deleteUser = (req: any, res: any) => {
 
     // backup the photo
     // before deleted
-    const oldPath = `${userOldPath}${users[0].userOriginalProfile}`;
-    const newPath = `${userDeletedPath}${users[0].userOriginalProfile}`;
+    const oldPath = `${userOldPath}${users[0].username}/${users[0].userOriginalProfile}`;
+    const newPath = `${userDeletedPath}${users[0].username}/${users[0].userOriginalProfile}`;
     await moveFile(oldPath, newPath);
 
     statusCode = 200;
@@ -434,28 +434,10 @@ const deleteImageProfile = (req: any, res: any, next: any) => {
       message
     });
   }
-  const imagePath = `${userOldPath}${req.user.userOriginalProfile}`;
+  const imagePath = `${userOldPath}${req.user.username}${req.user.userOriginalProfile}`;
   deleteFile(imagePath).then(() => {
     next();
   });
-};
-
-const makeNewProfile = async (req: any, res: any, next: any) => {
-  let folderName = 'default';
-  const statusCode = 400;
-  console.log(req.body);
-  if (!req.body.username) {
-    const message = 'No access';
-    next();
-  }
-  if (req.user) {
-    folderName = req.user.username;
-  }
-  if (req.body.username) {
-    folderName = req.body.username;
-  }
-  makeDir(`${userOldPath}${folderName}`);
-  next();
 };
 
 const uploadProfile = async (req: any, res: any, db: any) => {
@@ -504,7 +486,6 @@ export {
   addUser
   , uploadProfile
   , getUser
-  , makeNewProfile
   , updateUser
   , deleteImageProfile
   , deleteUser

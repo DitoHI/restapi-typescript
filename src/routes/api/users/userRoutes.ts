@@ -52,19 +52,4 @@ userRoutes.delete('/delete', (req, res) => {
   userController.deleteUser(req, res);
 });
 
-// testing fs: read file
-userRoutes.get('/readData', (req, res) => {
-  fs.readFile('userInfo.txt', 'utf8', (err, data) => {
-    if (err) {
-      return res.status(400).json({
-        error: err
-      });
-    }
-    const result = JSON.parse(data);
-    return res.status(200).json({
-      body: result
-    });
-  });
-});
-
 export { userRoutes };

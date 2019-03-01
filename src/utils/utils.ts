@@ -2,7 +2,7 @@ import fs, { unlink } from 'fs';
 import lokijs from 'lokijs';
 import moment from 'moment';
 import * as multer from 'multer';
-import { userOldPath } from './constant';
+import { userDeletedPath, userOldPath } from './constant';
 
 const loadCollection = (colName: string, db: lokijs): Promise<lokijs.Collection<any>> => {
   return new Promise((resolve) => {
@@ -22,16 +22,25 @@ const imageFilter = (req: any, file: any, cb: any) => {
 
 const storage = multer.diskStorage({
   destination: ((req: any, file, callback) => {
-    const newPath = `${userOldPath}${req.body.username}`;
-    makeDir(newPath);
-    callback(null, newPath);
+    let backupPath = '';
+    let oriPath = '';
+    if (req.body.username) {
+      oriPath = `${userOldPath}${req.body.username}`;
+      backupPath = `${userDeletedPath}${req.body.username}`;
+    } else if (req.user.username) {
+      oriPath = `${userOldPath}${req.user.username}`;
+      backupPath = `${userDeletedPath}${req.user.username}`;
+    }
+
+    makeDir(oriPath);
+    makeDir(backupPath);
+    callback(null, oriPath);
   }),
   filename: ((req: any, file, callback) => {
-    if (req.body.username != null) {
+    if (req.body.username) {
       const fileName = this.modifyImagetoLatest(req.body.username);
       callback(null, fileName);
-    }
-    if (req.user != null) {
+    } else if (req.user.username) {
       const fileName = this.modifyImagetoLatest(req.user.username);
       callback(null, fileName);
     }

@@ -103,3 +103,6 @@ src/models/
 # custom images
 public/
 
+# progress
+src/schema/food.ts
+

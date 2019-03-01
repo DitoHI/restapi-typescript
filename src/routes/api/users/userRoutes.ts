@@ -14,6 +14,8 @@ const uploadActivity = new UploadActivity('user');
 const upload = uploadActivity.upload;
 const db = uploadActivity.db;
 
+userRoutes.get('/me',  userController.verifyToken, userController.showToken);
+
 userRoutes.post('/create', upload.single('avatar'), async (req, res) => {
   userController.addUser(req, res, db);
 });
@@ -34,6 +36,7 @@ userRoutes.delete('/delete', (req, res) => {
   userController.deleteUser(req, res);
 });
 
+// testing fs: read file
 userRoutes.get('/readData', (req, res) => {
   fs.readFile('userInfo.txt', 'utf8', (err, data) => {
     if (err) {

@@ -52,7 +52,6 @@ const copy = (oldPath: string, newPath: string) => {
     writeStream.on('error', (err) => resolve(err));
 
     readStream.on('close', () => {
-      console.log(oldPath);
       fs.unlink(oldPath, (err) => resolve(err));
     });
 

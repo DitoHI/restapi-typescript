@@ -6,6 +6,48 @@ import { userDeletedPath, userOldPath } from '../../../utils/constant';
 import { loadCollection, move } from '../../../utils/utils';
 
 const collectionName = process.env.COLLECTION_NAME;
+const secret = process.env.SECRET;
+
+const showToken = (req: any, res: any) => {
+  const statusCode = 200;
+  const message = 'Authenticate success';
+  return res.status(statusCode).json({
+    message,
+    status: statusCode,
+    body: req.decoded,
+  });
+};
+
+const verifyToken = (req: any, res: any, next: any) => {
+  let statusCode = 0;
+  let message = '';
+
+  const token = req.body.token || req.query.token || req.headers.authorization;
+
+  if (!token) {
+    statusCode = 400;
+    message = 'No token provided';
+    return res.status(statusCode).json({
+      message
+    });
+  }
+
+  jwt.verify(token, secret, (err: any, decoded: any) => {
+    if (err) {
+      statusCode = 400;
+      message = 'Failed to authenticate token';
+      return res.status(statusCode).json({
+        message,
+        token
+      });
+    }
+
+    statusCode = 200;
+    message = 'Token authenticated';
+    req.decoded = decoded;
+    next();
+  });
+};
 
 const addUser = async (req: any, res: any, db: any) => {
   if (!req.body.name || !req.body.username || !req.body.email || !req.body.password) {
@@ -32,7 +74,7 @@ const addUser = async (req: any, res: any, db: any) => {
     password,
     userOriginalProfile,
   });
-  newUser.save((err, user) => {
+  newUser.save((err, user: any) => {
     let statusCode: number = 0;
     let messageLog: string = '';
     if (err) {
@@ -43,9 +85,19 @@ const addUser = async (req: any, res: any, db: any) => {
       });
     }
 
+    const userParsed = user as IUser;
+    const payload = {
+      id: user.id,
+      name: user.username,
+    };
+    const token = jwt.sign(payload, secret, {
+      expiresIn: 86400 // 24 hours
+    });
+
     statusCode = 200;
     messageLog = 'User has been saved';
     return res.status(statusCode).json({
+      token,
       message: messageLog,
       body: user,
     });
@@ -127,17 +179,9 @@ const getUser = (req: any, res: any) => {
       }
     }
 
-    // save auth to token
-    const payload = {
-      username: users[0]
-    };
-    const secret = process.env.SECRET;
-    const token = jwt.sign(payload, secret);
-
     statusCode = 200;
     messageLog = 'User found';
     return res.status(statusCode).json({
-      token,
       status: statusCode,
       message: messageLog,
       body: users,
@@ -368,4 +412,4 @@ const uploadProfile = async (req: any, res: any, db: any) => {
   });
 };
 
-export { addUser, uploadProfile, getUser, updateUser, deleteUser };
+export { addUser, uploadProfile, getUser, updateUser, deleteUser, verifyToken, showToken };

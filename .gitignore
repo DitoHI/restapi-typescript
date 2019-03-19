@@ -101,7 +101,7 @@ src/meeting/nine
 src/models/
 
 # custom images
-public/
+public/user
 
 # progress
 src/schema/food.ts

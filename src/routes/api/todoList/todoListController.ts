@@ -219,7 +219,7 @@ export const deleteTodoList = (req: any, res: any) => {
         .then((userResult) => {
           return res.status(STATUS_OK).json({
             user: userResult,
-            message: 'TodoList and User updated'
+            message: 'TodoList deleted and User updated'
           });
         })
         .catch((err) => {

@@ -163,7 +163,7 @@ todoListRoutes.put('/update', updateTodoList);
  *        "email": "ditohafizh@gmail.com",
  *        "password": "$2b$10$CdqRcZtBi0Nw1qETPjkXl.CSiZOZpG/mVA5/pnPKh5MauYwQ9wdC6",
  *       },
- *      "message": "TodoList and User updated"
+ *      "message": "TodoList deleted and User updated"
  *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {

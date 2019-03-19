@@ -3,8 +3,8 @@ import * as mongoose from 'mongoose';
 interface ITodoList {
   _id: string;
   name: string;
-  user: string[];
-  todo: string[];
+  user: any[];
+  todo: any[];
 }
 
 const todoListSchema = new mongoose.Schema({

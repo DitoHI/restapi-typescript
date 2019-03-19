@@ -1,3 +1,4 @@
 import { IUser } from './user';
+import { ITodoList } from './todoList';
 
-export { IUser };
+export { IUser, ITodoList };

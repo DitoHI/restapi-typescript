@@ -72,7 +72,7 @@ userRoutes
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
- *        "name": "dito,
+ *        "name": "dito",
  *        "username": "dito",
  *        "email": "ditohafizh@gmail.com",
  *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",

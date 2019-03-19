@@ -9,6 +9,7 @@ interface IUser {
   password: string;
   isActived: boolean;
   userOriginalProfile: string;
+  todoList: string[];
 }
 
 const userSchema = new mongoose.Schema({

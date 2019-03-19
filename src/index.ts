@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 // parent model
+import './schema/todoList';
 import './schema/user';
 
 // initialize passport

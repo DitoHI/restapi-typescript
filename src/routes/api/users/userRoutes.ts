@@ -42,7 +42,7 @@ const FAILED_RESPONSE = 400;
  *      "message" : "User not found"
  *    }
  * @apiErrorExample {json} Expired Token
- *    HTTP/1.1 400 FAILED {
+ *    HTTP/1.1 401 FAILED {
  *      "message" : "Token expired"
  *    }
  */
@@ -105,13 +105,11 @@ userRoutes
  * @apiParam {string} userOriginalProfile Image Profile
  * @apiParamExample {json} Input
  *    {
- *      "userOriginalProfile": "public/user/photos/new/dito/DSP_new_123.png"
+ *      "userOriginalProfile": "Nicho_SmartCard.jpg"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
- *      "body": {
- *        "userOriginalProfile": "public/user/photos/new/dito/DSP_new_123.png"
- *      }
+ *      "body": "public/user/photos/new/dito/dito_1553009709342.png",
  *      "message" : "Profile image updated successfully"
  *    }
  *
@@ -128,7 +126,7 @@ userRoutes
  *      "message" : "User not found"
  *    }
  * @apiErrorExample {json} Expired Token
- *    HTTP/1.1 400 FAILED {
+ *    HTTP/1.1 401 FAILED {
  *      "message" : "Token expired"
  *    }
  * @apiErrorExample {json} Error Updating Profile
@@ -257,7 +255,7 @@ userRoutes
  *      "message" : "User not found"
  *    }
  * @apiErrorExample {json} Expired Token
- *    HTTP/1.1 400 FAILED {
+ *    HTTP/1.1 401 FAILED {
  *      "message" : "Token expired"
  *    }
  * @apiErrorExample {json} No password inputed
@@ -284,16 +282,16 @@ userRoutes
  * @apiParam {string} password Password (if not provided then will return error)
  * @apiParamExample {json} Input
  *    {
- *      "password": "dito123"
+ *      "password": "dito"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
- *        "name": "Dito Hafizh",
+ *        "name": "dito",
  *        "username": "dito",
  *        "email": "ditohafizh__baru@gmail.com",
- *        "password": "",
- *        "userOriginalProfile": "public/user/photos/new/dito/DSP_new_123.png"
+ *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
+ *        "userOriginalProfile": "public/user/photos/new/dito/dito_1553009709342.png"
  *      }
  *      "message" : "User deleted"
  *    }
@@ -311,7 +309,7 @@ userRoutes
  *      "message" : "User not found"
  *    }
  * @apiErrorExample {json} Expired Token
- *    HTTP/1.1 400 FAILED {
+ *    HTTP/1.1 401 FAILED {
  *      "message" : "Token expired"
  *    }
  * @apiErrorExample {json} No password inputed
@@ -325,8 +323,6 @@ userRoutes
  */
 userRoutes
   .delete('/delete',
-          userController.verifyToken,
-          userController.getUserFromToken,
           userController.deleteUser);
 
 export { userRoutes };

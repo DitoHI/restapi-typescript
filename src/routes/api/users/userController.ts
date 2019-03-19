@@ -407,7 +407,7 @@ const deleteUser = (req: any, res: any) => {
       messageLog = 'User deleted';
       return res.status(statusCode).json({
         message: messageLog,
-        body: usersClone
+        body: usersClone[0]
       });
     });
 };
@@ -452,7 +452,5 @@ export {
   , getUser
   , updateUser
   , deleteUser
-  , verifyToken
-  , getUserFromToken
   , findUserById
 };

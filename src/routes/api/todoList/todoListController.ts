@@ -25,7 +25,7 @@ export const createTodoList = (req: any, res: any) => {
 
       const todoList = todoListResult as ITodoList;
       // update todoList ref in user
-      userModelMongooseModel
+      return userModelMongooseModel
         .findById(todoList.user)
         .then((userResult: any) => {
 
@@ -41,7 +41,7 @@ export const createTodoList = (req: any, res: any) => {
             user.todoList = [];
           }
           user.todoList.push(todoList._id);
-          userModelMongooseModel
+          return userModelMongooseModel
             .findByIdAndUpdate(user._id, { todoList: user.todoList }, { new: true })
             .then((userUpdatedResult: any) => {
 

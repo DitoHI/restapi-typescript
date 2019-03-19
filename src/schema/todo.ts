@@ -8,7 +8,7 @@ interface ITodo {
   todoList: string;
 }
 
-const todoListSchema = new mongoose.Schema({
+const todoSchema = new mongoose.Schema({
   name: {
     type: String,
     default: 'Empty ToDo'
@@ -19,7 +19,6 @@ const todoListSchema = new mongoose.Schema({
   },
   comment: [{
     type: String,
-    default: 'Empty Comment'
   }],
   todoList: {
     type: mongoose.Schema.Types.ObjectId,
@@ -27,6 +26,14 @@ const todoListSchema = new mongoose.Schema({
   }
 });
 
-const todoListModel = mongoose.model('Todo', todoListSchema);
+todoSchema.methods.toJSONFor = () => {
+  return {
+    name: this.name,
+    note: this.note,
+    comment: this.comment,
+  };
+};
+
+const todoListModel = mongoose.model('Todo', todoSchema);
 
 export { ITodo };

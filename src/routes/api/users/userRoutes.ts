@@ -22,11 +22,10 @@ const FAILED_RESPONSE = 400;
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
- *        "name": "Dito Hafizh",
+ *        "name": "dito",
  *        "username": "dito",
  *        "email": "ditohafizh@gmail.com",
- *        "password": "dito123",
- *        "userOriginalProfile": null
+ *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
  *      }
  *      "message" : "Authenticate success"
  *    }
@@ -48,11 +47,9 @@ const FAILED_RESPONSE = 400;
  *    }
  */
 userRoutes.get('/me',
-               userController.verifyToken,
-               userController.getUserFromToken,
                (req: any, res) => {
-                 return res.status(req.status).json({
-                   message: req.message,
+                 return res.status(SUCCESS_RESPONSE).json({
+                   message: 'Authenticate success',
                    body: req.user
                  });
                });
@@ -67,22 +64,24 @@ userRoutes.get('/me',
  * @apiParam {string} [userOriginalProfile] Optional Image Profile
  * @apiParamExample {json} Input
  *    {
- *      "name": "Dito Hafizh",
+ *      "name": "dito",
  *      "username": "dito",
  *      "email": "ditohafizh@gmail.com",
- *      "password": "dito123"
+ *      "password": "dito"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
- *        "name": "Dito Hafizh",
+ *        "name": "dito,
  *        "username": "dito",
  *        "email": "ditohafizh@gmail.com",
- *        "password": "ditohafizh@gmail.com",
+ *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
  *        "userOriginalProfile": null
  *      }
  *      "message" : "User has been saved",
- *      "token" : ""
+ *      "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNj
+ *      VlNDIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk2OTQyLCJleHAiOjE1NTMw
+ *      ODMzNDJ9.8wNFi061cTzOx7IH811urfFa9ME_7AQaQ8LaMxbKsuw"
  *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 400 FAILED {
@@ -171,17 +170,19 @@ userRoutes.post('/upload',
  * @apiParamExample {json} Input
  *    {
  *      "email": "ditohafizh@gmail.com",
- *      "password": "ditohafizh@gmail.com"
+ *      "password": "dito"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
- *        "name": "Dito Hafizh",
+ *        "name": "dito",
  *        "username": "dito",
  *        "email": "ditohafizh@gmail.com",
- *        "password": "",
- *        "userOriginalProfile": "public/user/photos/new/dito/DSP_new_123.png"
- *      }
+ *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
+ *      },
+ *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNjVlN
+ *      DIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk4OTQwLCJleHAiOjE1NTMwODUzNDB9.
+ *      qCpME4gseNaz5eupZCq4gGPHabvE8fE5TimuDh0Rohg",
  *      "message" : "Successfully login"
  *    }
  *
@@ -215,7 +216,7 @@ userRoutes.get('/login', userController.getUser);
  * @apiParamExample {json} Input
  *    {
  *      "newEmail": "ditohafizh__baru@gmail.com",
- *      "password": "dito123"
+ *      "password": "dito"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
@@ -258,10 +259,7 @@ userRoutes.get('/login', userController.getUser);
  *      "message" : "Failed updating user[_id:]"
  *    }
  */
-userRoutes.put('/update',
-               userController.verifyToken,
-               userController.getUserFromToken,
-               userController.updateUser);
+userRoutes.put('/update', userController.updateUser);
 
 /**
  * @api {delete} /user/delete Delete User

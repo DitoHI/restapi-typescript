@@ -3,16 +3,27 @@ import * as jwt from 'jsonwebtoken';
 import { IUser } from '../../../schema';
 import { userDeletedPath, userOldPath } from '../../../utils/constant';
 import {
-  deleteFile
-  , moveFile
+  moveFile
 } from '../../../utils/utils';
 
 import * as mongoose from 'mongoose';
 
-const userModel = mongoose.model('Users');
+const userModel = mongoose.model('User');
 
 const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
+
+const findUserById = (userId: any) => {
+  return userModel
+    .findById(userId)
+    .exec()
+    .then((user) => {
+      return user;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
 
 const getUserFromToken = (req: any, res: any, next: any) => {
   let statusCode = 400;
@@ -104,7 +115,7 @@ const addUser = async (req: any, res: any) => {
       let messageLog: string = '';
       if (err) {
         statusCode = 400;
-        messageLog = 'Failed saving to MongoDB';
+        messageLog = err;
         return res.status(statusCode).json({
           message: messageLog
         });
@@ -113,7 +124,6 @@ const addUser = async (req: any, res: any) => {
       const userParsed = user as IUser;
       const payload = {
         id: user.id,
-        name: user.username,
       };
       const token = jwt.sign(payload, secret, {
         expiresIn: 86400 // 24 hours
@@ -208,7 +218,6 @@ const getUser = (req: any, res: any) => {
       const user = users[0];
       const payload = {
         id: user._id,
-        name: user.username,
       };
       const token = jwt.sign(payload, secret, {
         expiresIn: 86400 // 24 hours
@@ -250,34 +259,8 @@ const updateUser = (req: any, res: any) => {
 
   const newPassword = req.body.newPassword;
 
-  const findUser: { [k: string]: any } = {};
-
-  email != null
-    ? findUser.email = email
-    : null;
-
-  username != null
-    ? findUser.username = username
-    : null;
-
-  if (email != null && newEmail == null) {
-    statusCode = 400;
-    messageLog = 'Please fill the new email you want to update';
-    return res.status(statusCode).json({
-      message: messageLog
-    });
-  }
-
-  if (username != null && newUsername == null) {
-    statusCode = 400;
-    messageLog = 'Please fill the new username you want to update';
-    return res.status(statusCode).json({
-      message: messageLog
-    });
-  }
-
   userModel
-    .find(findUser, async (err, output: any) => {
+    .findById(req.user._id, async (err, output: any) => {
       statusCode = 400;
       messageLog = 'Error finding user';
       if (err) {
@@ -285,8 +268,8 @@ const updateUser = (req: any, res: any) => {
           message: messageLog
         });
       }
-      const users = (output as IUser[]).slice();
-      if (users.length === 0) {
+      const user = output as IUser;
+      if (!user) {
         statusCode = 404;
         messageLog = 'No user found';
         return res.status(statusCode).json({
@@ -294,7 +277,7 @@ const updateUser = (req: any, res: any) => {
         });
       }
 
-      if (password == null) {
+      if (!password) {
         statusCode = 404;
         messageLog = 'Please input your password';
         return res.status(statusCode).json({
@@ -302,7 +285,7 @@ const updateUser = (req: any, res: any) => {
         });
       }
 
-      const valid = await bcrypt.compare(password, users[0].password);
+      const valid = await bcrypt.compare(password, user.password);
       if (!valid) {
         statusCode = 404;
         messageLog = 'Please check your password';
@@ -310,11 +293,9 @@ const updateUser = (req: any, res: any) => {
           message: messageLog
         });
       }
-      findUser.password = password;
 
       statusCode = 307;
       messageLog = 'User updated';
-      const userChanged = users.slice(0, 1)[0];
 
       const newUser: { [k: string]: any } = {};
 
@@ -331,20 +312,22 @@ const updateUser = (req: any, res: any) => {
         : null;
 
       userModel
-        .findByIdAndUpdate(userChanged._id, newUser, (errChild, outputChild: any) => {
-          if (err) {
-            messageLog = `Failed updating user[_id: ${userChanged._id}]`;
-            return res.status(statusCode).json({
-              message: messageLog
-            });
-          }
-        });
-
-      return res.status(statusCode).json({
-        message: messageLog,
-        body: newUser
-      });
-
+        .findByIdAndUpdate(user._id,
+                           newUser,
+                           { new: true },
+                           (errChild, outputChild: any) => {
+                             if (err) {
+                               statusCode = 400;
+                               messageLog = `Failed updating user[_id: ${outputChild._id}]`;
+                               return res.status(statusCode).json({
+                                 message: messageLog
+                               });
+                             }
+                             return res.status(statusCode).json({
+                               body: outputChild,
+                               message: 'User updated'
+                             });
+                           });
     });
 };
 
@@ -448,12 +431,12 @@ const uploadProfile = async (req: any) => {
     userModel
       .findByIdAndUpdate(user._id, { userOriginalProfile: newFilePath },
                          (err, result) => {
-                           if (err) {
-                             message = 'Error updating profile';
-                             return reject(message);
-                           }
-                           return resolve(newFilePath);
-                         });
+          if (err) {
+            message = 'Error updating profile';
+            return reject(message);
+          }
+          return resolve(newFilePath);
+        });
   });
 };
 
@@ -465,4 +448,5 @@ export {
   , deleteUser
   , verifyToken
   , getUserFromToken
+  , findUserById
 };

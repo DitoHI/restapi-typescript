@@ -12,7 +12,6 @@ interface IUser {
 }
 
 const userSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   username: { type: String, lowercase: true, unique: true, required: [true, 'can\'t be blank'] },
   email: {
     type: String, lowercase: true, unique: true, required: [true, 'can\'t be blank'],
@@ -23,11 +22,12 @@ const userSchema = new mongoose.Schema({
   },
   name: { type: String, lowercase: true, required: [true, 'can\'t be blank'] },
   isActived: { type: Boolean, default: true },
-  userOriginalProfile: { required: false, type: String, default: null }
+  userOriginalProfile: { required: false, type: String, default: null },
+  todoList: { type: mongoose.Schema.Types.ObjectId, ref:'Todo' }
 });
 
 userSchema.plugin(mongooseUniqueValidator, { message: 'is already taken' });
 
-const userModel = mongoose.model('Users', userSchema);
+const userModel = mongoose.model('User', userSchema);
 
 export { IUser, userModel };

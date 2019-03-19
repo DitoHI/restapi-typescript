@@ -3,7 +3,6 @@ import { UploadActivity } from '../../../utils/constant';
 import { deleteFile } from '../../../utils/utils';
 import * as userController from './userController';
 
-// testing
 const userRoutes = Router();
 
 // setup multer
@@ -91,6 +90,10 @@ userRoutes
  * @apiErrorExample {json} Error in Saving to Database
  *    HTTP/1.1 400 FAILED {
  *      "message" : "Failed saving to MongoDB"
+ *    }
+ * @apiErrorExample {json} Just support for file (jpg|jpeg|png|gif)
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "File that you upload is not supported"
  *    }
  */
 userRoutes

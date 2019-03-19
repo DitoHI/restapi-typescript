@@ -2,8 +2,8 @@ import { Express } from 'express';
 import passport from 'passport';
 
 const passportRoute = (app: Express) => {
-  app.use('/api', (req, res, next) => {
-    if (req.url === '/user/login' || req.url === '/user/create') {
+  app.use('/api/user', (req, res, next) => {
+    if (req.url === '/login' || req.url === '/create') {
       return next();
     }
 

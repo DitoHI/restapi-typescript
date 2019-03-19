@@ -176,3 +176,61 @@ export const updateTodoList = (req: any, res: any) => {
       });
     });
 };
+
+export const deleteTodoList = (req: any, res: any) => {
+  if (!req.body.id) {
+    return res.status(STATUS_NOT_ACCEPTABLE).json({
+      message: 'Please specify the id'
+    });
+  }
+
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
+  if (!isValidObjectId) {
+    return res.status(STATUS_NOT_ACCEPTABLE).json({
+      message: 'Invalid Id type'
+    });
+  }
+
+  todoListMongooseModel
+    .findByIdAndRemove(req.body.id)
+    .populate({ path: 'user', select: '_id name username email todoList' })
+    .exec()
+    .then(async (todoListDeleted: any) => {
+
+      // find corresponding user
+      const userIdArray = await todoListDeleted.user.filter((todoListMap: any) => {
+        if (req.user._id.equals(todoListMap._id)) {
+          return todoListMap;
+        }
+      });
+
+      if (userIdArray.length === 0) {
+        return res.status(STATUS_BAD_REQUEST).json({
+          message: 'TodoList does not have any correlation with the user'
+        });
+      }
+
+      const indexOfTodoInUser = userIdArray[0].todoList.indexOf(todoListDeleted._id);
+      userIdArray[0].todoList.splice(indexOfTodoInUser, 1);
+
+      userModelMongooseModel
+        .findByIdAndUpdate(req.user._id, { todoList: userIdArray[0].todoList }, { new: true })
+        .exec()
+        .then((userResult) => {
+          return res.status(STATUS_OK).json({
+            user: userResult,
+            message: 'TodoList and User updated'
+          });
+        })
+        .catch((err) => {
+          return res.status(STATUS_BAD_REQUEST).json({
+            message: err
+          });
+        });
+    })
+    .catch(() => {
+      return res.status(STATUS_BAD_REQUEST).json({
+        message: 'Nothing deleted'
+      });
+    });
+};

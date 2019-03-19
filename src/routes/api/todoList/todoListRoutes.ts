@@ -5,7 +5,7 @@ const SUCCESS_RESPONSE = 200;
 const FAILED_RESPONSE = 400;
 
 const todoListRoutes = Router();
-import { createTodoList, readTodoList, updateTodoList } from './todoListController';
+import { createTodoList, deleteTodoList, readTodoList, updateTodoList } from './todoListController';
 
 todoListRoutes.get('/test', (req, res) => { res.send('Welcome to ToDoList Routes'); });
 
@@ -130,9 +130,9 @@ todoListRoutes.get('/read', readTodoList);
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please specify any new name"
  *    }
- * @apiErrorExample {json} Form not completed
+ * @apiErrorExample {json} Inputted Id is Invalid
  *    HTTP/1.1 406 FAILED {
- *      "message" : "Id is not valid"
+ *      "message" : "Invalid Id type"
  *    }
  * @apiErrorExample {json} Empty TodoList
  *    HTTP/1.1 400 FAILED {
@@ -144,5 +144,47 @@ todoListRoutes.get('/read', readTodoList);
  *    }
  */
 todoListRoutes.put('/update', updateTodoList);
+
+/**
+ * @api {delete} /user/todoList/delete Delete a TodoList
+ * @apiDescription Delete the id in TodoList and User simultaneously
+ * @apiGroup TodoList
+ * @apiParam {string} id Id of TodoList
+ * @apiParamExample {json} Input
+ *    {
+ *      "id": "5c9145246c364b1b8ba73b00"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK {
+ *      "user": {
+ *        "isActived": true,
+ *        "userOriginalProfile": null,
+ *        "todoList": [],
+ *        "_id": "5c91447dfb84481adf4d4443",
+ *        "name": "dito",
+ *        "username": "dito",
+ *        "email": "ditohafizh@gmail.com",
+ *        "password": "$2b$10$CdqRcZtBi0Nw1qETPjkXl.CSiZOZpG/mVA5/pnPKh5MauYwQ9wdC6",
+ *       },
+ *      "message": "TodoList and User updated"
+ *    }
+ * @apiErrorExample {json} Form not completed
+ *    HTTP/1.1 406 FAILED {
+ *      "message" : "Please specify id"
+ *    }
+ * @apiErrorExample {json} Inputted Id is Invalid
+ *    HTTP/1.1 406 FAILED {
+ *      "message" : "Invalid Id type"
+ *    }
+ * @apiErrorExample {json} Uncorrelated TodoList and User
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "TodoList does not have any correlation with the user"
+ *    }
+ * @apiErrorExample {json} TodoList not deleted
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "Nothing deleted"
+ *    }
+ */
+todoListRoutes.delete('/delete', deleteTodoList);
 
 export default todoListRoutes;

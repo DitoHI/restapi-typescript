@@ -70,3 +70,11 @@ export const createTodoList = (req: any, res: any) => {
       });
     });
 };
+
+export const readTodoList = (req: any, res: any) => {
+  if (!req.body.id && !req.body.name) {
+    return res.status(STATUS_BAD_REQUEST).json({
+      message: 'Please specify the name or id'
+    })
+  }
+};

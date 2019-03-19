@@ -56,4 +56,6 @@ todoListRoutes.get('/test', (req, res) => { res.send('Welcome to ToDoList Routes
  */
 todoListRoutes.post('/create', createTodoList);
 
+todoListRoutes.get('/read');
+
 export default todoListRoutes;

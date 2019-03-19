@@ -1,6 +1,5 @@
 import fs, { unlink } from 'fs';
 import lokijs from 'lokijs';
-import moment from 'moment';
 import * as multer from 'multer';
 import { userDeletedPath, userOldPath } from './constant';
 
@@ -15,7 +14,8 @@ const loadCollection = (colName: string, db: lokijs): Promise<lokijs.Collection<
 
 const imageFilter = (req: any, file: any, cb: any) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-    return cb(new Error('Only image files are allowed!'), false);
+    req.fileValidationError = 'File that you upload is not supported';
+    return cb(null, false);
   }
   cb(null, true);
 };

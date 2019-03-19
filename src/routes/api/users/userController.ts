@@ -412,8 +412,13 @@ const deleteUser = (req: any, res: any) => {
     });
 };
 
-const uploadProfile = async (req: any) => {
+const uploadProfile = async (req: any, res: any) => {
   return new Promise((resolve, reject) => {
+    // file extension not supported
+    if (req.fileValidationError) {
+      return reject(req.fileValidationError);
+    }
+
     let message = 'Please at least upload an image';
     if (req.file == null) {
       return reject(message);
@@ -429,14 +434,15 @@ const uploadProfile = async (req: any) => {
     const user = req.user as IUser;
     const newFilePath = req.file.path;
     userModel
-      .findByIdAndUpdate(user._id, { userOriginalProfile: newFilePath },
+      .findByIdAndUpdate(user._id,
+                         { userOriginalProfile: newFilePath },
                          (err, result) => {
-          if (err) {
-            message = 'Error updating profile';
-            return reject(message);
-          }
-          return resolve(newFilePath);
-        });
+                           if (err) {
+                             message = 'Error updating profile';
+                             return reject(message);
+                           }
+                           return resolve(newFilePath);
+                         });
   });
 };
 

@@ -46,13 +46,14 @@ const FAILED_RESPONSE = 400;
  *      "message" : "Token expired"
  *    }
  */
-userRoutes.get('/me',
-               (req: any, res) => {
-                 return res.status(SUCCESS_RESPONSE).json({
-                   message: 'Authenticate success',
-                   body: req.user
-                 });
-               });
+userRoutes
+  .get('/me',
+       (req: any, res) => {
+         return res.status(SUCCESS_RESPONSE).json({
+           message: 'Authenticate success',
+           body: req.user
+         });
+       });
 
 /**
  * @api {post} /user/create Create an User
@@ -92,11 +93,10 @@ userRoutes.get('/me',
  *      "message" : "Failed saving to MongoDB"
  *    }
  */
-userRoutes.post('/create',
-                upload.single('userOriginalProfile'),
-                async (req, res) => {
-                  userController.addUser(req, res);
-                });
+userRoutes
+  .post('/create',
+        upload.single('userOriginalProfile'),
+        userController.addUser);
 
 /**
  * @api {post} /user/upload Upload Photo Profile
@@ -135,31 +135,44 @@ userRoutes.post('/create',
  *    HTTP/1.1 400 FAILED {
  *      "message" : "Failed to update profile"
  *    }
+ * @apiErrorExample {json} Just support for file (jpg|jpeg|png|gif)
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "File that you upload is not supported"
+ *    }
  */
-userRoutes.post('/upload',
-                userController.verifyToken,
-                userController.getUserFromToken,
-                upload.single('avatar'),
-                async (req, res) => {
-                  userController.uploadProfile(req).then((result) => {
+userRoutes
+  .post('/upload',
+        upload.single('userOriginalProfile'),
+        async (req: any, res) => {
+          userController.uploadProfile(req, res)
+            .then((result) => {
+              return res.status(SUCCESS_RESPONSE).json({
+                body: result,
+                message: 'Profile image updated successfully'
+              });
+            })
+            .catch((err) => {
+              // delete uploaded image if failed
+              // register
+              if (req.file) {
+                deleteFile(req.file.path)
+                  .then(() => {
                     return res.status(SUCCESS_RESPONSE).json({
-                      body: result,
                       message: 'Profile image updated successfully'
                     });
-                  }).catch((err) => {
-                    // delete uploaded image if failed
-                    // register
-                    deleteFile(req.file.path).then(() => {
-                      return res.status(SUCCESS_RESPONSE).json({
-                        message: 'Profile image updated successfully'
-                      });
-                    }).catch((errChild) => {
-                      return res.status(FAILED_RESPONSE).json({
-                        message: 'Failed to update profile'
-                      });
+                  })
+                  .catch((errChild) => {
+                    return res.status(FAILED_RESPONSE).json({
+                      message: 'Failed to update profile'
                     });
                   });
-                });
+              }
+
+              return res.status(FAILED_RESPONSE).json({
+                message: err
+              });
+            });
+        });
 
 /**
  * @api {get} /user/login Login User
@@ -203,7 +216,9 @@ userRoutes.post('/upload',
  *      "message" : "Please check your password"
  *    }
  */
-userRoutes.get('/login', userController.getUser);
+userRoutes
+  .get('/login',
+       userController.getUser);
 
 /**
  * @api {put} /user/update Update User
@@ -224,8 +239,7 @@ userRoutes.get('/login', userController.getUser);
  *        "name": "Dito Hafizh",
  *        "username": "dito",
  *        "email": "ditohafizh__baru@gmail.com",
- *        "password": "",
- *        "userOriginalProfile": "public/user/photos/new/dito/DSP_new_123.png"
+ *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq"
  *      }
  *      "message" : "User updated"
  *    }
@@ -259,7 +273,9 @@ userRoutes.get('/login', userController.getUser);
  *      "message" : "Failed updating user[_id:]"
  *    }
  */
-userRoutes.put('/update', userController.updateUser);
+userRoutes
+  .put('/update',
+       userController.updateUser);
 
 /**
  * @api {delete} /user/delete Delete User
@@ -307,9 +323,10 @@ userRoutes.put('/update', userController.updateUser);
  *      "message" : "Failed deleting user"
  *    }
  */
-userRoutes.delete('/delete',
-                  userController.verifyToken,
-                  userController.getUserFromToken,
-                  userController.deleteUser);
+userRoutes
+  .delete('/delete',
+          userController.verifyToken,
+          userController.getUserFromToken,
+          userController.deleteUser);
 
 export { userRoutes };

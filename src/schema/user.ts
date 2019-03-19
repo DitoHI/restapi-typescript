@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema({
   name: { type: String, lowercase: true, required: [true, 'can\'t be blank'] },
   isActived: { type: Boolean, default: true },
   userOriginalProfile: { required: false, type: String, default: null },
-  todoList: { type: mongoose.Schema.Types.ObjectId, ref:'Todo' }
+  todoList: [{ type: mongoose.Schema.Types.ObjectId, ref:'TodoList' }]
 });
 
 userSchema.plugin(mongooseUniqueValidator, { message: 'is already taken' });
 
 const userModel = mongoose.model('User', userSchema);
 
-export { IUser, userModel };
+export { IUser };

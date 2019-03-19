@@ -1,0 +1,8 @@
+{
+  "name": "ToDo App",
+  "version": "1.0.0",
+  "description": "API of ToDo App",
+  "template": {
+    "forceLanguage": "en"
+  }
+}

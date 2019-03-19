@@ -1,11 +1,15 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { historyModel, IHistory, IUser, userModel } from '../../../schema';
+import { IUser } from '../../../schema';
 import { userDeletedPath, userOldPath } from '../../../utils/constant';
 import {
   deleteFile
   , moveFile
 } from '../../../utils/utils';
+
+import * as mongoose from 'mongoose';
+
+const userModel = mongoose.model('Users');
 
 const collectionName = process.env.COLLECTION_NAME;
 const secret = process.env.SECRET;
@@ -14,38 +18,37 @@ const getUserFromToken = (req: any, res: any, next: any) => {
   let statusCode = 400;
   let message = 'Authenticate success';
   const decoded = req.decoded;
-  
-  userModel.findById(decoded.id, (err, output) => {
-    if (err) {
-      message = 'User not found';
-      return res.status(statusCode).json({
-        message,
-        status: statusCode,
-      });
-    }
-    
-    if (output == null) {
-      message = 'Token expired';
-      return res.status(statusCode).json({
-        message,
-        status: statusCode,
-      });
-    }
-    
-    statusCode = 200;
-    req.status = statusCode;
-    req.message = message;
-    req.user = output;
-    next();
-  });
+
+  userModel
+    .findById(decoded.id, (err, output) => {
+      if (err) {
+        message = 'User not found';
+        return res.status(statusCode).json({
+          message,
+        });
+      }
+
+      if (output == null) {
+        message = 'Token expired';
+        return res.status(statusCode).json({
+          message,
+        });
+      }
+
+      statusCode = 200;
+      req.status = statusCode;
+      req.message = message;
+      req.user = output;
+      next();
+    });
 };
 
 const verifyToken = (req: any, res: any, next: any) => {
   let statusCode = 0;
   let message = '';
-  
+
   const token = req.body.token || req.query.token || req.headers.authorization;
-  
+
   if (!token) {
     statusCode = 400;
     message = 'No token provided';
@@ -53,7 +56,7 @@ const verifyToken = (req: any, res: any, next: any) => {
       message
     });
   }
-  
+
   jwt.verify(token, secret, (err: any, decoded: any) => {
     if (err) {
       statusCode = 400;
@@ -63,7 +66,7 @@ const verifyToken = (req: any, res: any, next: any) => {
         token
       });
     }
-    
+
     statusCode = 200;
     message = 'Token authenticated';
     req.decoded = decoded;
@@ -71,23 +74,23 @@ const verifyToken = (req: any, res: any, next: any) => {
   });
 };
 
-const addUser = async (req: any, res: any, db: any) => {
+const addUser = async (req: any, res: any) => {
   if (!req.body.name || !req.body.username || !req.body.email || !req.body.password) {
     return res.status(400).json({
       message: 'Please fill the form'
     });
   }
-  
+
   const name = req.body.name;
   const username = req.body.username;
   const email = req.body.email;
   const password = await bcrypt.hash(req.body.password, 10);
-  
+
   let userOriginalProfile = null;
   req.file
     ? userOriginalProfile = req.file.path
     : null;
-  
+
   const newUser = new userModel({
     name,
     username,
@@ -95,346 +98,338 @@ const addUser = async (req: any, res: any, db: any) => {
     password,
     userOriginalProfile,
   });
-  newUser.save((err, user: any) => {
-    let statusCode: number = 0;
-    let messageLog: string = '';
-    if (err) {
-      statusCode = 400;
-      messageLog = 'Failed saving to MongoDB';
-      return res.status(statusCode).json({
-        message: messageLog
+  newUser
+    .save((err, user: any) => {
+      let statusCode: number = 0;
+      let messageLog: string = '';
+      if (err) {
+        statusCode = 400;
+        messageLog = 'Failed saving to MongoDB';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      const userParsed = user as IUser;
+      const payload = {
+        id: user.id,
+        name: user.username,
+      };
+      const token = jwt.sign(payload, secret, {
+        expiresIn: 86400 // 24 hours
       });
-    }
-    
-    const userParsed = user as IUser;
-    const payload = {
-      id: user.id,
-      name: user.username,
-    };
-    const token = jwt.sign(payload, secret, {
-      expiresIn: 86400 // 24 hours
+
+      statusCode = 200;
+      messageLog = 'User has been saved';
+      return res.status(statusCode).json({
+        token,
+        message: messageLog,
+        body: user,
+      });
+
     });
-    
-    statusCode = 200;
-    messageLog = 'User has been saved';
-    return res.status(statusCode).json({
-      token,
-      message: messageLog,
-      body: user,
-    });
-    
-  });
 };
 
 const getUser = (req: any, res: any) => {
-  if ((req.body.name == null || req.body.username == null) && req.body.password == null) {
+  if ((req.body.email == null || req.body.username == null) && req.body.password == null) {
     const statusCode = 400;
     const messageLog = 'Please specify name, username, or password';
     return res.status(statusCode).json({
-      status: statusCode,
       message: messageLog
     });
   }
-  
+
   const id = req.body.id;
-  
+
   const name = req.body.name;
-  
+
   const username = req.body.username;
-  
-  const operator = req.body.operator;
-  
+
+  const email = req.body.email;
+
   const password = req.body.password;
-  
+
   const isActived = req.body.isActived;
-  
+
   const findUser: { [k: string]: any } = {};
-  
+
   id != null
     ? findUser._id = id
     : null;
-  
+
   name != null
     ? findUser.name = name
     : null;
-  
+
   username != null
     ? findUser.username = username
     : null;
-  
+
+  email != null
+    ? findUser.email = email
+    : null;
+
   isActived != null
     ? findUser.isActived = isActived
     : null;
-  
-  userModel.find(findUser, async (err, output: any) => {
-    let statusCode: number = 0;
-    let messageLog: string = '';
-    if (err) {
+
+  userModel
+    .find(findUser, async (err, output: any) => {
+      let statusCode: number = 0;
+      let messageLog: string = '';
+      if (err) {
+        statusCode = 400;
+        messageLog = 'Failed finding at MongoDB';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      const users = output as IUser[];
+      if (users.length === 0) {
+        statusCode = 404;
+        messageLog = 'No user found';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      if (password != null) {
+        const valid = await bcrypt.compare(password, users[0].password);
+        if (!valid) {
+          statusCode = 404;
+          messageLog = 'Please check your password';
+          return res.status(statusCode).json({
+            message: messageLog
+          });
+        }
+      }
+
+      const user = users[0];
+      const payload = {
+        id: user._id,
+        name: user.username,
+      };
+      const token = jwt.sign(payload, secret, {
+        expiresIn: 86400 // 24 hours
+      });
+
+      statusCode = 200;
+      messageLog = 'Successfully login';
+      return res.status(statusCode).json({
+        token,
+        message: messageLog,
+        body: users,
+      });
+
+    });
+};
+
+const updateUser = (req: any, res: any) => {
+  const username = req.user.username;
+
+  const email = req.user.email;
+
+  // check if value wants to be updated
+  // and the new value already inputted
+  let statusCode: number = 400;
+  let messageLog: string = '';
+
+  if (!req.body.newUsername && !req.body.newEmail) {
+    messageLog = 'Please fill the form';
+    return res.status(statusCode).json({
+      message: messageLog
+    });
+  }
+
+  const newUsername = req.body.newUsername;
+
+  const newEmail = req.body.newEmail;
+
+  const password = req.body.password;
+
+  const newPassword = req.body.newPassword;
+
+  const findUser: { [k: string]: any } = {};
+
+  email != null
+    ? findUser.email = email
+    : null;
+
+  username != null
+    ? findUser.username = username
+    : null;
+
+  if (email != null && newEmail == null) {
+    statusCode = 400;
+    messageLog = 'Please fill the new email you want to update';
+    return res.status(statusCode).json({
+      message: messageLog
+    });
+  }
+
+  if (username != null && newUsername == null) {
+    statusCode = 400;
+    messageLog = 'Please fill the new username you want to update';
+    return res.status(statusCode).json({
+      message: messageLog
+    });
+  }
+
+  userModel
+    .find(findUser, async (err, output: any) => {
       statusCode = 400;
-      messageLog = 'Failed finding at MongoDB';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    const users = output as IUser[];
-    if (users.length === 0) {
-      statusCode = 404;
-      messageLog = 'No user found';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    if (password != null) {
+      messageLog = 'Error finding user';
+      if (err) {
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+      const users = (output as IUser[]).slice();
+      if (users.length === 0) {
+        statusCode = 404;
+        messageLog = 'No user found';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      if (password == null) {
+        statusCode = 404;
+        messageLog = 'Please input your password';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
       const valid = await bcrypt.compare(password, users[0].password);
       if (!valid) {
         statusCode = 404;
         messageLog = 'Please check your password';
         return res.status(statusCode).json({
-          status: statusCode,
           message: messageLog
         });
       }
-    }
-    
-    const user = users[0];
-    const payload = {
-      id: user._id,
-      name: user.username,
-    };
-    const token = jwt.sign(payload, secret, {
-      expiresIn: 86400 // 24 hours
-    });
-    
-    statusCode = 200;
-    messageLog = 'User found';
-    return res.status(statusCode).json({
-      token,
-      status: statusCode,
-      message: messageLog,
-      body: users,
-    });
-    
-  });
-};
+      findUser.password = password;
 
-const updateUser = (req: any, res: any) => {
-  const username = req.user.username;
-  
-  const email = req.user.email;
-  
-  // check if value wants to be updated
-  // and the new value already inputted
-  let statusCode: number = 400;
-  let messageLog: string = '';
-  
-  if (!req.body.newUsername && !req.body.newEmail) {
-    messageLog = 'Please fill the form';
-    return res.status(statusCode).json({
-      status: statusCode,
-      message: messageLog
-    });
-  }
-  
-  const newUsername = req.body.newUsername;
-  
-  const newEmail = req.body.newEmail;
-  
-  const password = req.body.password;
-  
-  const newPassword = req.body.newPassword;
-  
-  const findUser: { [k: string]: any } = {};
-  
-  email != null
-    ? findUser.email = email
-    : null;
-  
-  username != null
-    ? findUser.username = username
-    : null;
-  
-  if (email != null && newEmail == null) {
-    statusCode = 400;
-    messageLog = 'Please fill the new email you want to update';
-    return res.status(statusCode).json({
-      status: statusCode,
-      message: messageLog
-    });
-  }
-  
-  if (username != null && newUsername == null) {
-    statusCode = 400;
-    messageLog = 'Please fill the new username you want to update';
-    return res.status(statusCode).json({
-      status: statusCode,
-      message: messageLog
-    });
-  }
-  
-  userModel.find(findUser, async (err, output: any) => {
-    statusCode = 400;
-    messageLog = 'Error finding user';
-    if (err) {
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    const users = (output as IUser[]).slice();
-    if (users.length === 0) {
-      statusCode = 404;
-      messageLog = 'No user found';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    if (password == null) {
-      statusCode = 404;
-      messageLog = 'Please input your password';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    const valid = await bcrypt.compare(password, users[0].password);
-    if (!valid) {
-      statusCode = 404;
-      messageLog = 'Please check your password';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    findUser.password = password;
-    
-    statusCode = 307;
-    messageLog = 'User updated';
-    const userChanged = users.slice(0, 1)[0];
-    
-    const newUser: { [k: string]: any } = {};
-    
-    newEmail != null
-      ? newUser.user = newEmail
-      : null;
-    
-    newUsername != null
-      ? newUser.username = newUsername
-      : null;
-    
-    newPassword != null
-      ? newUser.password = newPassword
-      : null;
-    
-    userModel.findByIdAndUpdate(userChanged._id, newUser, (errChild, outputChild: any) => {
-      if (err) {
-        messageLog = `Failed updating user[_id: ${userChanged._id}]`;
-        statusCode = 403;
-        return res.status(statusCode).json({
-          status: statusCode,
-          message: messageLog
+      statusCode = 307;
+      messageLog = 'User updated';
+      const userChanged = users.slice(0, 1)[0];
+
+      const newUser: { [k: string]: any } = {};
+
+      newEmail != null
+        ? newUser.email = newEmail
+        : null;
+
+      newUsername != null
+        ? newUser.username = newUsername
+        : null;
+
+      newPassword != null
+        ? newUser.password = newPassword
+        : null;
+
+      userModel
+        .findByIdAndUpdate(userChanged._id, newUser, (errChild, outputChild: any) => {
+          if (err) {
+            messageLog = `Failed updating user[_id: ${userChanged._id}]`;
+            return res.status(statusCode).json({
+              message: messageLog
+            });
+          }
         });
-      }
+
+      return res.status(statusCode).json({
+        message: messageLog,
+        body: newUser
+      });
+
     });
-    
-    return res.status(statusCode).json({
-      status: statusCode,
-      message: messageLog,
-      body: newUser
-    });
-    
-  });
 };
 
 const deleteUser = (req: any, res: any) => {
   let statusCode: number = 0;
   let messageLog: string = '';
-  
+
   if (!req.body.password) {
     statusCode = 400;
     messageLog = 'Please input your password';
     return res.status(statusCode).json({
-      status: statusCode,
       message: messageLog
     });
   }
-  
+
   const username = req.user.username;
-  
+
   const email = req.user.email;
-  
+
   const password = req.body.password;
-  
+
   const findUser: { [k: string]: any } = {};
-  
+
   username != null
     ? findUser.username = username
     : null;
-  
+
   email != null
     ? findUser.email = email
     : null;
-  
-  userModel.find(findUser, async (err, output: any) => {
-    const users = output as IUser[];
-    if (users.length === 0) {
-      statusCode = 400;
-      messageLog = 'No user found';
+
+  userModel
+    .find(findUser, async (err, output: any) => {
+      const users = output as IUser[];
+      if (users.length === 0) {
+        statusCode = 400;
+        messageLog = 'No user found';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      const valid = await bcrypt.compare(password, users[0].password);
+      if (!valid) {
+        statusCode = 404;
+        messageLog = 'Please check your password';
+        return res.status(statusCode).json({
+          message: messageLog
+        });
+      }
+
+      const usersClone = users.slice();
+      usersClone
+        .map(async (user) => {
+          userModel
+            .deleteOne({ _id: user._id }, (errChild) => {
+              if (errChild) {
+                statusCode = 400;
+                messageLog = 'Failed deleting user';
+                return res.status(statusCode).json({
+                  message: messageLog
+                });
+              }
+            });
+        });
+
+      // backup the photo
+      // before deleted
+      if (req.user.userOriginalProfile) {
+        const oldPath = req.user.userOriginalProfile;
+        const newPath =
+          `${userDeletedPath}${users[0].username}/${users[0].username}_${Date.now()}.png`;
+        await moveFile(oldPath, newPath);
+      }
+
+      statusCode = 200;
+      messageLog = 'User deleted';
       return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    const valid = await bcrypt.compare(password, users[0].password);
-    if (!valid) {
-      statusCode = 404;
-      messageLog = 'Please check your password';
-      return res.status(statusCode).json({
-        status: statusCode,
-        message: messageLog
-      });
-    }
-    
-    const usersClone = users.slice();
-    usersClone.map(async (user) => {
-      userModel.deleteOne({ _id: user._id }, (errChild) => {
-        if (errChild) {
-          statusCode = 400;
-          messageLog = 'Failed deleting at MongoDB';
-          return res.status(statusCode).json({
-            status: statusCode,
-            message: messageLog
-          });
-        }
+        message: messageLog,
+        body: usersClone
       });
     });
-
-    // backup the photo
-    // before deleted
-    if (req.user.userOriginalProfile) {
-      const oldPath = req.user.userOriginalProfile;
-      const newPath = `${userDeletedPath}${users[0].username}/${users[0].username}_${Date.now()}.png`;
-      await moveFile(oldPath, newPath);
-    }
-
-    statusCode = 200;
-    messageLog = 'User deleted';
-    return res.status(statusCode).json({
-      status: statusCode,
-      message: messageLog,
-      body: usersClone
-    });
-  });
 };
 
-const uploadProfile = async (req: any, res: any) => {
+const uploadProfile = async (req: any) => {
   return new Promise((resolve, reject) => {
     let message = 'Please at least upload an image';
     if (req.file == null) {
@@ -450,14 +445,15 @@ const uploadProfile = async (req: any, res: any) => {
 
     const user = req.user as IUser;
     const newFilePath = req.file.path;
-    userModel.findByIdAndUpdate(user._id, { userOriginalProfile: newFilePath },
-                                (err, result) => {
-                                  if (err) {
-                                    message = 'Error updating profile';
-                                    return reject(message);
-                                  }
-                                  return resolve(newFilePath);
-                                });
+    userModel
+      .findByIdAndUpdate(user._id, { userOriginalProfile: newFilePath },
+                         (err, result) => {
+                           if (err) {
+                             message = 'Error updating profile';
+                             return reject(message);
+                           }
+                           return resolve(newFilePath);
+                         });
   });
 };
 

@@ -25,6 +25,25 @@ const findUserById = (userId: any) => {
     });
 };
 
+const getUserAll = (req: any, res: any) => {
+  let statusCode = 200;
+  userModel
+    .find()
+    .select('username email name')
+    .exec()
+    .then((users) => {
+      return res.status(statusCode).json({
+        body: users
+      });
+    })
+    .catch(() => {
+      statusCode = 400;
+      return res.status(statusCode).json({
+        message: 'Failed to fetch all users'
+      });
+    });
+};
+
 const getUserFromToken = (req: any, res: any, next: any) => {
   let statusCode = 400;
   let message = 'Authenticate success';
@@ -450,6 +469,7 @@ export {
   addUser
   , uploadProfile
   , getUser
+  , getUserAll
   , updateUser
   , deleteUser
   , findUserById

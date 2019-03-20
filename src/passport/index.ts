@@ -3,7 +3,7 @@ import passport from 'passport';
 
 const passportRoute = (app: Express) => {
   app.use('/api/user', (req, res, next) => {
-    if (req.url === '/login' || req.url === '/create') {
+    if (req.url === '/login' || req.url === '/create' || req.url === '/readAll') {
       return next();
     }
 

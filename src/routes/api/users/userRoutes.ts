@@ -326,5 +326,12 @@ userRoutes
 userRoutes
   .delete('/delete',
           userController.deleteUser);
+/**
+ * @api {get} /user/readAll Get all users
+ * @apiGroup User
+ */
+userRoutes
+  .get('/readAll',
+       userController.getUserAll);
 
 export { userRoutes };

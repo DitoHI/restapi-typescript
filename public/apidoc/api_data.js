@@ -69,78 +69,6 @@ define({ "api": [
     "name": "DeleteUserTodoDelete"
   },
   {
-    "type": "get",
-    "url": "/user/todo/read",
-    "title": "Get a Todo",
-    "group": "Todo",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Id of Todo</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "name",
-            "description": "<p>Optional if id is not provided. Name of Todo</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "note",
-            "description": "<p>Optional if id is not provided. Note of Todo</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"name\" : \"Love is eternal\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo Found\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Form not completed",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify any parameters\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Id of TodoList does not match",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Invalid Id type\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Not matching Id of TodoList",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Not getting any ToDo\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/routes/api/todo/todoRoutes.ts",
-    "groupTitle": "Todo",
-    "name": "GetUserTodoRead"
-  },
-  {
     "type": "delete",
     "url": "/user/todoList/delete",
     "title": "Delete a TodoList",
@@ -205,33 +133,26 @@ define({ "api": [
     "name": "DeleteUserTodolistDelete"
   },
   {
-    "type": "get",
-    "url": "/user/todoList/read",
-    "title": "Get list of TodoList",
+    "type": "post",
+    "url": "/user/todoList/addUserAccess",
+    "title": "Add user access to TodoList",
     "group": "TodoList",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "string",
+            "type": "string[]",
             "optional": false,
-            "field": "name",
-            "description": "<p>Category of Todo (case insensitive)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "id",
-            "description": "<p>optional if name is not provided, Id of TodoList</p>"
+            "field": "userId",
+            "description": "<p>Array of userId</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"family\"\n}",
+          "content": "{\n  \"id\": \"5c91fe27c25ae422b43e842f\",\n  \"userId\": [\n    \"5c91ac442175b7002c1db1dc\"\n  ]\n}",
           "type": "json"
         }
       ]
@@ -240,7 +161,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"message\": \"TodoList found\",\n  \"todoList\": [\n  {\n    \"name\": \"family\"\n    \"user\": [\n      {\n        \"_id\": \"5c910f036f43302e80088042\",\n        \"name\": \"dito\",\n        \"username\": \"dito\",\n        \"email\": \"ditohafizh@gmail.com\",\n      }\n    ],\n    \"_id\": \"5c912e3aee5fcf5f39536a8a\"\n  }",
+          "content": "   HTTP/1.1 200 OK {\n     \"todoList\": {\n     \"name\": \"Love\",\n     \"user\": [\n     {\n       \"_id\": \"5c91cc8b2005211a6c4911c6\",\n       \"username\": \"dito\",\n       \"email\": \"ditohafizh@gmail.com\"\n     },\n     {\n       \"_id\": \"5c91a3a52175b7002c1db1cd\",\n       \"username\": \"anwar\",\n       \"email\": \"anwarabdullan28@gmail.com\"\n     },\n     {\n       \"_id\": \"5c91ac442175b7002c1db1dc\",\n       \"username\": \"anwar2019\",\n       \"email\": \"anwar@example.com\"\n     }\n   ],\n   \"todo\": [],\n   \"_id\": \"5c91fe27c25ae422b43e842f\",\n   \"createdBy\": {\n     \"_id\": \"5c91cc8b2005211a6c4911c6\",\n     \"username\": \"dito\",\n     \"email\": \"ditohafizh@gmail.com\"\n    },\n     \"__v\": 0\n   },\n\"message\": \"TodoList updated\"\n   }",
           "type": "json"
         }
       ]
@@ -249,17 +170,22 @@ define({ "api": [
       "examples": [
         {
           "title": "Form not completed",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify the name or id\"\n}",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify id\"\n}",
           "type": "json"
         },
         {
-          "title": "Form not completed",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Id is not valid\"\n}",
+          "title": "Inputted Id is Invalid",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Invalid Id type\"\n}",
           "type": "json"
         },
         {
-          "title": "Empty TodoList",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No ToDoList found\"\n}",
+          "title": "Uncorrelated TodoList and User",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"TodoList does not have any correlation with the user\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "TodoList not deleted",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Nothing deleted\"\n}",
           "type": "json"
         }
       ]
@@ -267,7 +193,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "GetUserTodolistRead"
+    "name": "PostUserTodolistAdduseraccess"
   },
   {
     "type": "post",
@@ -331,6 +257,66 @@ define({ "api": [
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
     "name": "PostUserTodolistCreate"
+  },
+  {
+    "type": "post",
+    "url": "/user/todoList/read",
+    "title": "Get list of TodoList",
+    "group": "TodoList",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "name",
+            "description": "<p>optional Category of Todo (case insensitive)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "id",
+            "description": "<p>optional Id of TodoList</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"family\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"message\": \"TodoList found\",\n  \"todoList\": [\n  {\n    \"name\": \"family\"\n    \"user\": [\n      {\n        \"_id\": \"5c910f036f43302e80088042\",\n        \"name\": \"dito\",\n        \"username\": \"dito\",\n        \"email\": \"ditohafizh@gmail.com\",\n      }\n    ],\n    \"_id\": \"5c912e3aee5fcf5f39536a8a\"\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not completed",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Id is not valid\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Empty TodoList",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No ToDoList found\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/todoList/todoListRoutes.ts",
+    "groupTitle": "TodoList",
+    "name": "PostUserTodolistRead"
   },
   {
     "type": "put",
@@ -492,6 +478,78 @@ define({ "api": [
     "filename": "src/routes/api/todo/todoRoutes.ts",
     "groupTitle": "Todo",
     "name": "PostUserTodoCreate"
+  },
+  {
+    "type": "post",
+    "url": "/user/todo/read",
+    "title": "Get a Todo",
+    "group": "Todo",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Id of Todo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Optional if id is not provided. Name of Todo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "note",
+            "description": "<p>Optional if id is not provided. Note of Todo</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\" : \"Love is eternal\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo Found\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not completed",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify any parameters\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Id of TodoList does not match",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Invalid Id type\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Not matching Id of TodoList",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Not getting any ToDo\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/todo/todoRoutes.ts",
+    "groupTitle": "Todo",
+    "name": "PostUserTodoRead"
   },
   {
     "type": "put",
@@ -665,83 +723,6 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/user/login",
-    "title": "Login User",
-    "group": "User",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "email",
-            "description": "<p>Email</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": true,
-            "field": "username",
-            "description": "<p>Optional if email is not provided</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "string",
-            "optional": false,
-            "field": "password",
-            "description": "<p>Password</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"email\": \"ditohafizh@gmail.com\",\n  \"password\": \"dito\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNjVlN\n  DIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk4OTQwLCJleHAiOjE1NTMwODUzNDB9.\n  qCpME4gseNaz5eupZCq4gGPHabvE8fE5TimuDh0Rohg\",\n  \"message\" : \"Successfully login\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Form not filled",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please specify name, username, or password\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Form not filled",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please specify name, username, or password\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "User not found",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No user found\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Password not match",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please check your password\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/routes/api/users/userRoutes.ts",
-    "groupTitle": "User",
-    "name": "GetUserLogin"
-  },
-  {
-    "type": "get",
     "url": "/user/me",
     "title": "Get LoggedIn User",
     "header": {
@@ -881,6 +862,83 @@ define({ "api": [
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
     "name": "PostUserCreate"
+  },
+  {
+    "type": "post",
+    "url": "/user/login",
+    "title": "Login User",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "username",
+            "description": "<p>Optional if email is not provided</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"email\": \"ditohafizh@gmail.com\",\n  \"password\": \"dito\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNjVlN\n  DIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk4OTQwLCJleHAiOjE1NTMwODUzNDB9.\n  qCpME4gseNaz5eupZCq4gGPHabvE8fE5TimuDh0Rohg\",\n  \"message\" : \"Successfully login\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not filled",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please specify name, username, or password\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Form not filled",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please specify name, username, or password\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "User not found",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No user found\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Password not match",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Please check your password\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/users/userRoutes.ts",
+    "groupTitle": "User",
+    "name": "PostUserLogin"
   },
   {
     "type": "post",

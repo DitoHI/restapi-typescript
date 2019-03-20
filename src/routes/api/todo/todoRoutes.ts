@@ -57,7 +57,7 @@ todoRoutes.get('/test', (req, res) => { res.send('Welcome to ToDo Routes'); });
 todoRoutes.post('/create', createTodo);
 
 /**
- * @api {get} /user/todo/read Get a Todo
+ * @api {post} /user/todo/read Get a Todo
  * @apiGroup Todo
  * @apiParam {string} id Id of Todo
  * @apiParam {string} [name] Optional if id is not provided. Name of Todo
@@ -99,7 +99,7 @@ todoRoutes.post('/create', createTodo);
  *      "message" : "Not getting any ToDo"
  *    }
  */
-todoRoutes.get('/read', getTodo);
+todoRoutes.post('/read', getTodo);
 
 /**
  * @api {put} /user/todo/update Update a Todo

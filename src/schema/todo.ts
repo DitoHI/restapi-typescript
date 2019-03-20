@@ -6,6 +6,8 @@ interface ITodo {
   note: string;
   comments: string[];
   todoList: string;
+  isBookmarked: boolean;
+  isCompleted: boolean;
 }
 
 const todoSchema = new mongoose.Schema({
@@ -17,13 +19,18 @@ const todoSchema = new mongoose.Schema({
     type: String,
     default: 'Empty Note'
   },
-  comment: [{
-    type: String,
-  }],
   todoList: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TodoList'
-  }
+  },
+  isBookmarked: {
+    type: Boolean,
+    default: false
+  },
+  isCompleted: {
+    type: Boolean,
+    default: false
+  },
 });
 
 todoSchema.methods.toJSONFor = () => {

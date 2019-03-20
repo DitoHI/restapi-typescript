@@ -291,7 +291,8 @@ export const addAccessTodoList = (req: any, res: any) => {
 
       todoListMongooseModel
         .findByIdAndUpdate(req.body.id, { user: todoListUniqueUsers }, { new: true })
-        .populate({ path: 'user', select: '_id username' })
+        .populate({ path: 'user', select: '_id username email' })
+        .populate({ path: 'createdBy', select: 'username email' })
         .exec()
         .then((todoListUpdatedResult) => {
           if (!todoListUpdatedResult) {

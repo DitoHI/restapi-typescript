@@ -162,9 +162,6 @@ export const updateTodo = (req: any, res: any) => {
   req.body.note
     ? updatedTodo.note = req.body.note
     : null;
-  req.body.comment
-    ? updatedTodo.note = req.body.comment
-    : null;
 
   todoMongooseModel
     .findByIdAndUpdate(req.body.id, updatedTodo, { new: true })

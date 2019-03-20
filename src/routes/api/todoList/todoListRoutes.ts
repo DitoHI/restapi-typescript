@@ -2,14 +2,17 @@
 import { Router } from 'express';
 
 const todoListRoutes = Router();
-import { addAccessTodoList,
+import {
+  addAccessTodoList,
   createTodoList,
   deleteTodoList,
   readTodoList,
   updateTodoList,
 } from './todoListController';
 
-todoListRoutes.get('/test', (req, res) => { res.send('Welcome to ToDoList Routes'); });
+todoListRoutes.get('/test', (req, res) => {
+  res.send('Welcome to ToDoList Routes');
+});
 
 /**
  * @api {post} /user/todoList/create Create a TodoList
@@ -185,6 +188,66 @@ todoListRoutes.put('/update', updateTodoList);
  */
 todoListRoutes.delete('/delete', deleteTodoList);
 
+/**
+ * @api {post} /user/todoList/addUserAccess Add user access to TodoList
+ * @apiGroup TodoList
+ * @apiParam {string[]} userId Array of userId
+ * @apiParamExample {json} Input
+ *    {
+ *      "id": "5c91fe27c25ae422b43e842f",
+ *      "userId": [
+ *        "5c91ac442175b7002c1db1dc"
+ *      ]
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK {
+ *      "todoList": {
+ *      "name": "Love",
+ *      "user": [
+ *      {
+ *        "_id": "5c91cc8b2005211a6c4911c6",
+ *        "username": "dito",
+ *        "email": "ditohafizh@gmail.com"
+ *      },
+ *      {
+ *        "_id": "5c91a3a52175b7002c1db1cd",
+ *        "username": "anwar",
+ *        "email": "anwarabdullan28@gmail.com"
+ *      },
+ *      {
+ *        "_id": "5c91ac442175b7002c1db1dc",
+ *        "username": "anwar2019",
+ *        "email": "anwar@example.com"
+ *      }
+ *    ],
+ *    "todo": [],
+ *    "_id": "5c91fe27c25ae422b43e842f",
+ *    "createdBy": {
+ *      "_id": "5c91cc8b2005211a6c4911c6",
+ *      "username": "dito",
+ *      "email": "ditohafizh@gmail.com"
+ *     },
+ *      "__v": 0
+ *    },
+ * "message": "TodoList updated"
+ *    }
+ * @apiErrorExample {json} Form not completed
+ *    HTTP/1.1 406 FAILED {
+ *      "message" : "Please specify id"
+ *    }
+ * @apiErrorExample {json} Inputted Id is Invalid
+ *    HTTP/1.1 406 FAILED {
+ *      "message" : "Invalid Id type"
+ *    }
+ * @apiErrorExample {json} Uncorrelated TodoList and User
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "TodoList does not have any correlation with the user"
+ *    }
+ * @apiErrorExample {json} TodoList not deleted
+ *    HTTP/1.1 400 FAILED {
+ *      "message" : "Nothing deleted"
+ *    }
+ */
 todoListRoutes.post('/addUserAccess', addAccessTodoList);
 
 export default todoListRoutes;

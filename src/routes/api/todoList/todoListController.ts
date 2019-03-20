@@ -17,7 +17,8 @@ export const createTodoList = (req: any, res: any) => {
     });
   }
 
-  req.body.user = req.user._id;
+  req.body.user = [];
+  req.body.user.push(req.user._id);
   const todoListModel = new todoListMongooseModel(req.body);
   todoListModel
     .save()
@@ -26,7 +27,7 @@ export const createTodoList = (req: any, res: any) => {
       const todoList = todoListResult as ITodoList;
       // update todoList ref in user
       return userModelMongooseModel
-        .findById(todoList.user)
+        .findById(req.user._id)
         .then((userResult: any) => {
 
           const user = userResult as IUser;
@@ -74,12 +75,6 @@ export const createTodoList = (req: any, res: any) => {
 };
 
 export const readTodoList = (req: any, res: any) => {
-  if (!req.body.id && !req.body.name) {
-    return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the name or id'
-    });
-  }
-
   if (req.body.id) {
     const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
     if (!isValidObjectId) {

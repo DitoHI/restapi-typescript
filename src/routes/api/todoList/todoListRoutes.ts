@@ -56,8 +56,8 @@ todoListRoutes.post('/create', createTodoList);
 /**
  * @api {get} /user/todoList/read Get list of TodoList
  * @apiGroup TodoList
- * @apiParam {string} name Category of Todo (case insensitive)
- * @apiParam {string} [id] optional if name is not provided, Id of TodoList
+ * @apiParam {string} [name] optional Category of Todo (case insensitive)
+ * @apiParam {string} [id] optional Id of TodoList
  * @apiParamExample {json} Input
  *    {
  *      "name": "family"
@@ -78,10 +78,6 @@ todoListRoutes.post('/create', createTodoList);
  *        ],
  *        "_id": "5c912e3aee5fcf5f39536a8a"
  *      }
- * @apiErrorExample {json} Form not completed
- *    HTTP/1.1 406 FAILED {
- *      "message" : "Please specify the name or id"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Id is not valid"

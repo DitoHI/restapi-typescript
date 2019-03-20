@@ -176,7 +176,7 @@ userRoutes
         });
 
 /**
- * @api {get} /user/login Login User
+ * @api {post} /user/login Login User
  * @apiGroup User
  * @apiParam {string} email Email
  * @apiParam {string} [username] Optional if email is not provided
@@ -218,8 +218,7 @@ userRoutes
  *    }
  */
 userRoutes
-  .get('/login',
-       userController.getUser);
+  .post('/login', userController.getUser);
 
 /**
  * @api {put} /user/update Update User

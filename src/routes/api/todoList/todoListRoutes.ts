@@ -54,7 +54,7 @@ todoListRoutes.get('/test', (req, res) => { res.send('Welcome to ToDoList Routes
 todoListRoutes.post('/create', createTodoList);
 
 /**
- * @api {get} /user/todoList/read Get list of TodoList
+ * @api {post} /user/todoList/read Get list of TodoList
  * @apiGroup TodoList
  * @apiParam {string} [name] optional Category of Todo (case insensitive)
  * @apiParam {string} [id] optional Id of TodoList
@@ -87,7 +87,7 @@ todoListRoutes.post('/create', createTodoList);
  *      "message" : "No ToDoList found"
  *    }
  */
-todoListRoutes.get('/read', readTodoList);
+todoListRoutes.post('/read', readTodoList);
 
 /**
  * @api {put} /user/todoList/update Update the name of TodoList

@@ -106,11 +106,17 @@ export const getTodo = (req: any, res: any) => {
   req.body.note
     ? findTodo.note = new RegExp(`^${req.body.note}$`, 'i')
     : null;
+  req.body.startAt && req.body.endAt
+    ? findTodo.createdAt = {
+      $gte: new Date(req.body.startAt),
+      $lt: new Date(req.body.endAt)
+    }
+    : null;
 
   todoMongooseModel
     .find(findTodo)
     .populate({ path: 'todoList', select: '_id name user' })
-    .then(async (todoResult: any) => {
+    .then((todoResult: any) => {
       if (todoResult.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
           message: 'No Todo found'
@@ -118,10 +124,12 @@ export const getTodo = (req: any, res: any) => {
       }
 
       // filter by ToDoList from user
-      const todoFilter = await todoResult.filter((todoResultFilter: any) => {
-        const indexOfUserinTodoList = todoResultFilter.todoList.user.indexOf(req.user._id);
-        if (indexOfUserinTodoList >= 0) {
-          return todoResultFilter;
+      const todoFilter = todoResult.filter((todoResultFilter: any) => {
+        if (todoResultFilter.todoList) {
+          const indexOfUserinTodoList = todoResultFilter.todoList.user.indexOf(req.user._id);
+          if (indexOfUserinTodoList >= 0) {
+            return todoResultFilter;
+          }
         }
       });
 
@@ -214,7 +222,6 @@ export const deleteToDo = (req: any, res: any) => {
         });
       }
       todoDeleted.todoList.todo.splice(indexOfTodoinTodoList, 1);
-      console.log(todoDeleted.todoList.todo);
       todoListMongooseModel
         .findByIdAndUpdate(todoDeleted.todoList._id, { todo: todoDeleted.todoList.todo },
                            { new: true })

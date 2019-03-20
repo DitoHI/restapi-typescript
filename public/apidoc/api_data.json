@@ -1,6 +1,194 @@
 [
   {
     "type": "delete",
+    "url": "/user/comment/delete",
+    "title": "Delete a comment",
+    "group": "Comment",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Optimal Id of Comment</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"id\": \"5c920f50cdd88440784419f7\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n      \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n    ],\n   \"_id\": \"5c9152034916d83aee01790e\",\n   \"todoList\": { 5c91fe27c25ae422b43e842f }\n   \"message\": \"Comment deleted and Todo updated\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not completed",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify the Comment Id\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Failed to delete commment",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Failed to remove comment\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/comment/commentRoutes.ts",
+    "groupTitle": "Comment",
+    "name": "DeleteUserCommentDelete"
+  },
+  {
+    "type": "post",
+    "url": "/user/comment/create",
+    "title": "Create a comment",
+    "group": "Comment",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "todo",
+            "description": "<p>Id of Todo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Optional Name of Comment</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"todo\": \"5c920e969dbbe53eb7368f92\",\n  \"name\" : \"Yes, I love it two\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love in unlimited\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n        \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": { 5c91fe27c25ae422b43e842f }\n  },\n  \"message\": \"Check out your new comments inside this Todo\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not completed",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please input the Todo Id\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Saving comment failed",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Failed of saving comment\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Updating Todo failed",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Failed to update Todo inside Comment\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Updating Todo failed",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"There is no Todo which is updated\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/comment/commentRoutes.ts",
+    "groupTitle": "Comment",
+    "name": "PostUserCommentCreate"
+  },
+  {
+    "type": "post",
+    "url": "/user/comment/read",
+    "title": "Get comments",
+    "group": "Comment",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Optimal Id of Comment</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "name",
+            "description": "<p>Optional Name of Comment</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"id\": \"5c920f50cdd88440784419f7\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK {\n  \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n      \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n    ],\n   \"_id\": \"5c9152034916d83aee01790e\",\n   \"todoList\": { 5c91fe27c25ae422b43e842f }\n   \"message\": \"Check out your new comments inside this Todo\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Form not completed",
+          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify the parameters\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Failed to find commment",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Error in finding comment\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Comment is empty",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No comment found\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/routes/api/comment/commentRoutes.ts",
+    "groupTitle": "Comment",
+    "name": "PostUserCommentRead"
+  },
+  {
+    "type": "delete",
     "url": "/user/todo/delete",
     "title": "Delete a Todo",
     "description": "<p>Delete the id in Todo, ToDoList, and User simultaneously</p>",
@@ -445,7 +633,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n  },\n  \"message\": \"Todo Created\"\n}",
+          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\"\n  },\n  \"_id\": \"5c91fe27c25ae422b43e842f\",\n  \"createdBy\": {\n    \"name\": \"dito\"\n  }\n  \"message\": \"Check out new Todo inside your TodoList\"\n}",
           "type": "json"
         }
       ]
@@ -490,9 +678,9 @@
           {
             "group": "Parameter",
             "type": "string",
-            "optional": false,
+            "optional": true,
             "field": "id",
-            "description": "<p>Id of Todo</p>"
+            "description": "<p>optional Id of Todo</p>"
           },
           {
             "group": "Parameter",
@@ -522,7 +710,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo Found\"\n}",
+          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n     \"name\": \"Love is eternal\",\n     \"note\": \"Love Testing\",\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo Found\"\n}",
           "type": "json"
         }
       ]
@@ -530,18 +718,13 @@
     "error": {
       "examples": [
         {
-          "title": "Form not completed",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Please specify any parameters\"\n}",
-          "type": "json"
-        },
-        {
           "title": "Id of TodoList does not match",
           "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Invalid Id type\"\n}",
           "type": "json"
         },
         {
           "title": "Not matching Id of TodoList",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"Not getting any ToDo\"\n}",
+          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No Todo found\"\n}",
           "type": "json"
         }
       ]

@@ -4,10 +4,11 @@ interface ITodo {
   _id: string;
   name: string;
   note: string;
-  comments: string[];
+  comment: string[];
   todoList: string;
   isBookmarked: boolean;
   isCompleted: boolean;
+  createdAt: Date;
 }
 
 const todoSchema = new mongoose.Schema({
@@ -31,6 +32,14 @@ const todoSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  comment: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
 });
 
 todoSchema.methods.toJSONFor = () => {

@@ -28,14 +28,13 @@ todoRoutes.get('/test', (req, res) => { res.send('Welcome to ToDo Routes'); });
  *    HTTP/1.1 200 OK {
  *      "todo": {
  *        "name": "Love is eternal",
- *        "note": "Love Testing",
- *        "comment": [
- *          "Check",
- *          "It",
- *          "Out"
- *         ],
+ *        "note": "Love Testing"
  *      },
- *      "message": "Todo Created"
+ *      "_id": "5c91fe27c25ae422b43e842f",
+ *      "createdBy": {
+ *        "name": "dito"
+ *      }
+ *      "message": "Check out new Todo inside your TodoList"
  *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
@@ -59,7 +58,7 @@ todoRoutes.post('/create', createTodo);
 /**
  * @api {post} /user/todo/read Get a Todo
  * @apiGroup Todo
- * @apiParam {string} id Id of Todo
+ * @apiParam {string} [id] optional Id of Todo
  * @apiParam {string} [name] Optional if id is not provided. Name of Todo
  * @apiParam {string} [note] Optional if id is not provided. Note of Todo
  * @apiParamExample {json} Input
@@ -69,13 +68,8 @@ todoRoutes.post('/create', createTodo);
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "todo": {
- *        "name": "Love is eternal",
- *        "note": "Love Testing",
- *        "comment": [
- *          "Check",
- *          "It",
- *          "Out"
- *         ],
+ *         "name": "Love is eternal",
+ *         "note": "Love Testing",
  *         "_id": "5c9152034916d83aee01790e",
  *         "todoList": {
  *           "name": "Love",
@@ -86,17 +80,13 @@ todoRoutes.post('/create', createTodo);
  *      },
  *      "message": "Todo Found"
  *    }
- * @apiErrorExample {json} Form not completed
- *    HTTP/1.1 406 FAILED {
- *      "message" : "Please specify any parameters"
- *    }
  * @apiErrorExample {json} Id of TodoList does not match
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Invalid Id type"
  *    }
  * @apiErrorExample {json} Not matching Id of TodoList
  *    HTTP/1.1 400 FAILED {
- *      "message" : "Not getting any ToDo"
+ *      "message" : "No Todo found"
  *    }
  */
 todoRoutes.post('/read', getTodo);

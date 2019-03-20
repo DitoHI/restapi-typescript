@@ -58,10 +58,12 @@ export const createTodo = (req: any, res: any) => {
 
           return todoListMongooseModel
             .findByIdAndUpdate(req.body.todoList, { todo: todoList.todo }, { new: true })
+            .populate({ path: 'todo', select: 'name note createdAt' })
+            .populate({ path: 'createdBy', select: 'name username email' })
             .then((todoListUpdatedResult: any) => {
               return res.status(STATUS_CREATED).json({
-                todo: todoModel,
-                message: 'Todo created'
+                todoList: todoListUpdatedResult,
+                message: 'Check out new Todo inside your TodoList'
               });
             })
             .catch(() => {
@@ -85,12 +87,6 @@ export const createTodo = (req: any, res: any) => {
 };
 
 export const getTodo = (req: any, res: any) => {
-  if (!req.body.id && !req.body.name && !req.body.note) {
-    return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify any parameters'
-    });
-  }
-
   if (req.body.id) {
     const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
     if (!isValidObjectId) {
@@ -117,7 +113,7 @@ export const getTodo = (req: any, res: any) => {
     .then(async (todoResult: any) => {
       if (todoResult.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'Not getting any ToDo'
+          message: 'No Todo found'
         });
       }
 

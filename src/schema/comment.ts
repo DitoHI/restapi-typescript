@@ -5,16 +5,13 @@ interface IComment {
   name: string;
   user: string;
   todo: string;
+  createdAt: Date;
 }
 
 const commentSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: 'Empty ToDo'
-  },
-  note: {
-    type: String,
-    default: 'Empty Note'
+    default: 'Empty Comment'
   },
   user: {
     required: true,
@@ -24,7 +21,11 @@ const commentSchema = new mongoose.Schema({
   todo: {
     required: true,
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Todo'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

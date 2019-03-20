@@ -961,6 +961,16 @@
     "name": "GetUserMe"
   },
   {
+    "type": "get",
+    "url": "/user/readAll",
+    "title": "Get all Users",
+    "group": "User",
+    "version": "0.0.0",
+    "filename": "src/routes/api/users/userRoutes.ts",
+    "groupTitle": "User",
+    "name": "GetUserReadall"
+  },
+  {
     "type": "post",
     "url": "/user/create",
     "title": "Create an User",

@@ -97,6 +97,7 @@ export const readTodoList = (req: any, res: any) => {
     .find(findTodoList)
     .populate({ path: 'createdBy', select: 'name username email' })
     .populate({ path: 'user', select: '_id name username email' })
+    .populate({ path: 'todo', select: '_id name' })
     // .populate('todo')
     .then(async (todoListResult: any) => {
 

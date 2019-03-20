@@ -19,6 +19,7 @@ export const createTodoList = (req: any, res: any) => {
 
   req.body.user = [];
   req.body.user.push(req.user._id);
+  req.body.createdBy = req.user._id;
   const todoListModel = new todoListMongooseModel(req.body);
   todoListModel
     .save()
@@ -228,4 +229,92 @@ export const deleteTodoList = (req: any, res: any) => {
         message: 'Nothing deleted'
       });
     });
+};
+
+export const addAccessTodoList = (req: any, res: any) => {
+  if (!req.body.id) {
+    return res.status(STATUS_NOT_ACCEPTABLE).json({
+      message: 'Please specify your TodoList Id'
+    });
+  }
+
+  if (!req.body.userId) {
+    return res.status(STATUS_NOT_ACCEPTABLE).json({
+      message: 'Please specify at least one user Id'
+    });
+  }
+
+  if (req.body.userId instanceof Array) {
+    (req.body.userId).forEach((item: any) => {
+      if (typeof item !== 'string') {
+        return res.status(STATUS_NOT_ACCEPTABLE).json({
+          message: 'One of userId is not string'
+        });
+      }
+      if (req.user._id.equals(item)) {
+        return res.status(STATUS_NOT_ACCEPTABLE).json({
+          message: 'Inputted userId is already an admin'
+        });
+      }
+    });
+  } else {
+    return res.status(STATUS_NOT_ACCEPTABLE).json({
+      message: 'UserId must be array type'
+    });
+  }
+
+  // check if userId is valid ObjectId
+  for (const userId of req.body.userId) {
+    const valid = mongoose.Types.ObjectId.isValid(userId);
+    if (!valid) {
+      return res.status(STATUS_NOT_ACCEPTABLE).json({
+        message: 'One of your user Id is not valid type'
+      });
+    }
+  }
+
+  todoListMongooseModel
+    .findById(req.body.id)
+    .exec()
+    .then((todoListResult: any) => {
+      if (!todoListResult) {
+        return res.status(STATUS_BAD_REQUEST).json({
+          message: 'TodoList not found'
+        });
+      }
+
+      const todoList = todoListResult as ITodoList;
+      todoList.user.push(req.body.userId);
+
+      // filter userIdArray to be unique
+      const todoListUniqueUsers = todoList.user.filter((v, i, a) => a.indexOf(v) === i);
+
+      todoListMongooseModel
+        .findByIdAndUpdate(req.body.id, { user: todoListUniqueUsers }, { new: true })
+        .populate({ path: 'user', select: '_id username' })
+        .exec()
+        .then((todoListUpdatedResult) => {
+          if (!todoListUpdatedResult) {
+            return res.status(STATUS_BAD_REQUEST).json({
+              message: 'No TodoList is updated'
+            });
+          }
+
+          return res.status(STATUS_OK).json({
+            todoList: todoListUpdatedResult,
+            message: 'TodoList updated'
+          });
+        })
+        .catch(() => {
+          return res.status(STATUS_BAD_REQUEST).json({
+            message: 'Failed in updating TodoList'
+          });
+        });
+    })
+    .catch(() => {
+      return res.status(STATUS_BAD_REQUEST).json({
+        message: 'Failed in finding TodoList'
+      });
+    });
+
 };

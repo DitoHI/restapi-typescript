@@ -5,6 +5,7 @@ interface ITodoList {
   name: string;
   user: any[];
   todo: any[];
+  createdBy: string;
 }
 
 const todoListSchema = new mongoose.Schema({
@@ -19,7 +20,12 @@ const todoListSchema = new mongoose.Schema({
   todo: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Todo'
-  }]
+  }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 const todoListModel = mongoose.model('TodoList', todoListSchema);

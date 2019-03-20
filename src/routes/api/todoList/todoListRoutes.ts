@@ -2,7 +2,12 @@
 import { Router } from 'express';
 
 const todoListRoutes = Router();
-import { createTodoList, deleteTodoList, readTodoList, updateTodoList } from './todoListController';
+import { addAccessTodoList,
+  createTodoList,
+  deleteTodoList,
+  readTodoList,
+  updateTodoList,
+} from './todoListController';
 
 todoListRoutes.get('/test', (req, res) => { res.send('Welcome to ToDoList Routes'); });
 
@@ -179,5 +184,7 @@ todoListRoutes.put('/update', updateTodoList);
  *    }
  */
 todoListRoutes.delete('/delete', deleteTodoList);
+
+todoListRoutes.post('/addUserAccess', addAccessTodoList);
 
 export default todoListRoutes;

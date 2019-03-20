@@ -95,6 +95,7 @@ export const readTodoList = (req: any, res: any) => {
 
   todoListMongooseModel
     .find(findTodoList)
+    .populate({ path: 'createdBy', select: 'name username email' })
     .populate({ path: 'user', select: '_id name username email' })
     // .populate('todo')
     .then(async (todoListResult: any) => {
@@ -108,12 +109,17 @@ export const readTodoList = (req: any, res: any) => {
 
       // filter the result
       // just return todoList which has the user id
-      const todoListArrayFiltered = await todoListArray.filter((filtered: any) => {
-        return filtered.user.map((newFiltered: any) => {
-          if (newFiltered._id === req.user._id) {
-            return filtered;
+      const todoListArrayFiltered = todoListArray.filter((filtered: any) => {
+        const userInTodoListArr = filtered.user.map((mapped: any) => mapped._id);
+        let returnedTodoList = false;
+        for (const userInTodoList of userInTodoListArr) {
+          if (userInTodoList.equals(req.user._id)) {
+            returnedTodoList = true;
           }
-        });
+        }
+        if (returnedTodoList) {
+          return filtered;
+        }
       });
 
       if (todoListArrayFiltered.length === 0) {
@@ -211,6 +217,7 @@ export const deleteTodoList = (req: any, res: any) => {
 
       userModelMongooseModel
         .findByIdAndUpdate(req.user._id, { todoList: userIdArray[0].todoList }, { new: true })
+        .populate('todoList')
         .exec()
         .then((userResult) => {
           return res.status(STATUS_OK).json({

@@ -197,6 +197,7 @@ export const deleteTodoList = (req: any, res: any) => {
   todoListMongooseModel
     .findByIdAndRemove(req.body.id)
     .populate({ path: 'user', select: '_id name username email todoList' })
+    .populate({ path: 'createdBy', select: '_id name username email' })
     .exec()
     .then(async (todoListDeleted: any) => {
 

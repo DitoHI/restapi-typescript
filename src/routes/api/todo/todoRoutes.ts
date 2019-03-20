@@ -61,33 +61,8 @@ todoRoutes.post('/create', createTodo);
  * @apiParam {string} [id] optional Id of Todo
  * @apiParam {string} [name] Optional if id is not provided. Name of Todo
  * @apiParam {string} [note] Optional if id is not provided. Note of Todo
- * @apiParamExample {json} Input
- *    {
- *      "name" : "Love is eternal"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todo": {
- *         "name": "Love is eternal",
- *         "note": "Love Testing",
- *         "_id": "5c9152034916d83aee01790e",
- *         "todoList": {
- *           "name": "Love",
- *           "user": [
- *             "5c91447dfb84481adf4d4443"
- *           ]
- *         }
- *      },
- *      "message": "Todo Found"
- *    }
- * @apiErrorExample {json} Id of TodoList does not match
- *    HTTP/1.1 406 FAILED {
- *      "message" : "Invalid Id type"
- *    }
- * @apiErrorExample {json} Not matching Id of TodoList
- *    HTTP/1.1 400 FAILED {
- *      "message" : "No Todo found"
- *    }
+ * @apiParam {ISODate} [startDate] Optional if id is not provided. Starting Date
+ * @apiParam {ISODate} [endDate] Optional if id is not provided. Ending of Date
  */
 todoRoutes.post('/read', getTodo);
 

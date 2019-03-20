@@ -695,39 +695,23 @@ define({ "api": [
             "optional": true,
             "field": "note",
             "description": "<p>Optional if id is not provided. Note of Todo</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ISODate",
+            "optional": true,
+            "field": "startDate",
+            "description": "<p>Optional if id is not provided. Starting Date</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ISODate",
+            "optional": true,
+            "field": "endDate",
+            "description": "<p>Optional if id is not provided. Ending of Date</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"name\" : \"Love is eternal\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n     \"name\": \"Love is eternal\",\n     \"note\": \"Love Testing\",\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo Found\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Id of TodoList does not match",
-          "content": "HTTP/1.1 406 FAILED {\n  \"message\" : \"Invalid Id type\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Not matching Id of TodoList",
-          "content": "HTTP/1.1 400 FAILED {\n  \"message\" : \"No Todo found\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "version": "0.0.0",
     "filename": "src/routes/api/todo/todoRoutes.ts",

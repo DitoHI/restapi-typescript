@@ -7,7 +7,7 @@ const STATUS_CREATED = 201;
 const STATUS_BAD_REQUEST = 400;
 const STATUS_NOT_ACCEPTABLE = 406;
 
-const commentMongooseModel = mongoose.model('Todo');
+const commentMongooseModel = mongoose.model('Comment');
 const todoMongooseModel = mongoose.model('Todo');
 const todoListMongooseModel = mongoose.model('TodoList');
 const userModelMongooseModel = mongoose.model('User');
@@ -247,6 +247,40 @@ export const deleteTodoList = (req: any, res: any) => {
         });
       }
 
+      // delete todo & comment
+      todoListDeleted.todo.forEach((todoChild: any) => {
+        todoMongooseModel
+          .findById(todoChild._id)
+          .exec()
+          .then((todoInChild: any) => {
+            const todo = todoInChild as ITodo;
+            todo.comment.forEach((todoComment: any) => {
+              commentMongooseModel
+                .findByIdAndDelete(todoComment)
+                .exec()
+                .catch(() => {
+                  return res.status(STATUS_BAD_REQUEST).json({
+                    message: 'Error in deleting comments'
+                  });
+                });
+            });
+          })
+          .catch(() => {
+            return res.status(STATUS_BAD_REQUEST).json({
+              message: 'Error deleting comments'
+            });
+          });
+
+        todoMongooseModel
+          .findByIdAndDelete(todoChild._id)
+          .exec()
+          .catch(() => {
+            return res.status(STATUS_BAD_REQUEST).json({
+              message: 'Error in deleting todos'
+            });
+          });
+      });
+
       const indexOfTodoInUser = userIdArray[0].todoList.indexOf(todoListDeleted._id);
       userIdArray[0].todoList.splice(indexOfTodoInUser, 1);
 
@@ -255,45 +289,6 @@ export const deleteTodoList = (req: any, res: any) => {
         .populate('todoList')
         .exec()
         .then((userResult: any) => {
-
-          // delete todo & comment in TodoList
-          userResult.todoList.forEach((todoListChild: ITodoList) => {
-            todoListChild.todo.forEach((todoChild: ITodo) => {
-
-              todoMongooseModel
-                .findById(todoChild)
-                .exec()
-                .then((todoInChild: any) => {
-
-                  todoInChild.comment.forEach((todoComments: any) => {
-                    const comment = todoComments as IComment;
-                    commentMongooseModel
-                      .findByIdAndDelete(comment._id)
-                      .exec()
-                      .catch(() => {
-                        return res.status(STATUS_BAD_REQUEST).json({
-                          message: 'Error in deleting comments'
-                        });
-                      });
-                  });
-                })
-                .catch(() => {
-                  return res.status(STATUS_BAD_REQUEST).json({
-                    message: 'Error in deleting comments'
-                  });
-                });
-
-              todoMongooseModel
-                .findByIdAndDelete(todoChild._id)
-                .exec()
-                .catch(() => {
-                  return res.status(STATUS_BAD_REQUEST).json({
-                    message: 'Error in deleting todos'
-                  });
-                });
-            });
-          });
-
           return res.status(STATUS_OK).json({
             user: userResult,
             message: 'TodoList, todos, comments deleted and User updated'

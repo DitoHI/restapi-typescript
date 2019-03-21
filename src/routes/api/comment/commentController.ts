@@ -91,12 +91,26 @@ export const getComment = (req: any, res: any) => {
         });
       }
 
+      if (commentResult.length === 0) {
+        return res.status(STATUS_BAD_REQUEST).json({
+          message: 'No comment found'
+        });
+      }
+
       if (req.body.todo) {
         const commentFilteredResult = commentResult.filter((filtered: any) => {
-          if (filtered.todo._id.equals(req.body.todo)) {
-            return filtered;
+          if (filtered.todo) {
+            if (filtered.todo._id.equals(req.body.todo)) {
+              return filtered;
+            }
           }
         });
+
+        if (commentFilteredResult.length === 0) {
+          return res.status(STATUS_BAD_REQUEST).json({
+            message: 'No comment found'
+          });
+        }
 
         return res.status(STATUS_BAD_REQUEST).json({
           comment: commentFilteredResult,
@@ -109,7 +123,7 @@ export const getComment = (req: any, res: any) => {
         message: 'Comments found'
       });
     })
-    .catch(() => {
+    .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
         message: 'Error in finding comment'
       });

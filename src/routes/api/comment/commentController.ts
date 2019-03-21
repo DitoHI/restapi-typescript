@@ -84,10 +84,23 @@ export const getComment = (req: any, res: any) => {
     .populate({ path: 'todo', select: 'name' })
     .populate({ path: 'user', select: 'name username email' })
     .exec()
-    .then((commentResult) => {
+    .then((commentResult: any) => {
       if (!commentResult) {
         return res.status(STATUS_BAD_REQUEST).json({
           message: 'No comment found'
+        });
+      }
+
+      if (req.body.todo) {
+        const commentFilteredResult = commentResult.filter((filtered: any) => {
+          if (filtered.todo._id.equals(req.body.todo)) {
+            return filtered;
+          }
+        });
+
+        return res.status(STATUS_BAD_REQUEST).json({
+          comment: commentFilteredResult,
+          message: 'Comments found'
         });
       }
 

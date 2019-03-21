@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ITodoList, IUser } from '../../../schema';
+import { IComment, ITodo, ITodoList, IUser } from '../../../schema';
 
 // use case
 const STATUS_OK = 200;
@@ -7,6 +7,8 @@ const STATUS_CREATED = 201;
 const STATUS_BAD_REQUEST = 400;
 const STATUS_NOT_ACCEPTABLE = 406;
 
+const commentMongooseModel = mongoose.model('Todo');
+const todoMongooseModel = mongoose.model('Todo');
 const todoListMongooseModel = mongoose.model('TodoList');
 const userModelMongooseModel = mongoose.model('User');
 
@@ -160,6 +162,7 @@ export const updateTodoList = (req: any, res: any) => {
 
   todoListMongooseModel
     .findByIdAndUpdate(req.body.id, { name: req.body.name }, { new: true })
+    .select('_id name')
     .populate({ path: 'user', select: '_id name username email' })
     .then((todoListResult) => {
       if (!todoListResult) {
@@ -168,10 +171,40 @@ export const updateTodoList = (req: any, res: any) => {
         });
       }
 
-      return res.status(STATUS_OK).json({
-        message: 'TodoList updated',
-        todoList: todoListResult
-      });
+      todoListMongooseModel
+        .find()
+        .populate({ path: 'user', select: '_id name email username' })
+        .populate({ path: 'todo', select: '_id name' })
+        .exec()
+        .then((todoListAllResult) => {
+
+          // filter the result
+          // just return todoList which has the user id
+          const todoListArrayFiltered = todoListAllResult.filter((filtered: any) => {
+            const userInTodoListArr = filtered.user.map((mapped: any) => mapped._id);
+            let returnedTodoList = false;
+            for (const userInTodoList of userInTodoListArr) {
+              if (userInTodoList.equals(req.user._id)) {
+                returnedTodoList = true;
+              }
+            }
+            if (returnedTodoList) {
+              return filtered;
+            }
+          });
+
+          if (todoListArrayFiltered.length === 0) {
+            return res.status(STATUS_BAD_REQUEST).json({
+              message: 'No ToDoList found'
+            });
+          }
+
+          return res.status(STATUS_OK).json({
+            message: 'TodoList updated',
+            todoList: todoListArrayFiltered,
+            todoListUpdated: todoListResult
+          });
+        });
     })
     .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
@@ -221,10 +254,49 @@ export const deleteTodoList = (req: any, res: any) => {
         .findByIdAndUpdate(req.user._id, { todoList: userIdArray[0].todoList }, { new: true })
         .populate('todoList')
         .exec()
-        .then((userResult) => {
+        .then((userResult: any) => {
+
+          // delete todo & comment in TodoList
+          userResult.todoList.forEach((todoListChild: ITodoList) => {
+            todoListChild.todo.forEach((todoChild: ITodo) => {
+
+              todoMongooseModel
+                .findById(todoChild)
+                .exec()
+                .then((todoInChild: any) => {
+
+                  todoInChild.comment.forEach((todoComments: any) => {
+                    const comment = todoComments as IComment;
+                    commentMongooseModel
+                      .findByIdAndDelete(comment._id)
+                      .exec()
+                      .catch(() => {
+                        return res.status(STATUS_BAD_REQUEST).json({
+                          message: 'Error in deleting comments'
+                        });
+                      });
+                  });
+                })
+                .catch(() => {
+                  return res.status(STATUS_BAD_REQUEST).json({
+                    message: 'Error in deleting comments'
+                  });
+                });
+
+              todoMongooseModel
+                .findByIdAndDelete(todoChild._id)
+                .exec()
+                .catch(() => {
+                  return res.status(STATUS_BAD_REQUEST).json({
+                    message: 'Error in deleting todos'
+                  });
+                });
+            });
+          });
+
           return res.status(STATUS_OK).json({
             user: userResult,
-            message: 'TodoList deleted and User updated'
+            message: 'TodoList, todos, comments deleted and User updated'
           });
         })
         .catch((err) => {

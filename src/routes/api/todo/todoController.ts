@@ -116,6 +116,7 @@ export const getTodo = (req: any, res: any) => {
   todoMongooseModel
     .find(findTodo)
     .populate({ path: 'todoList', select: '_id name user' })
+    .populate({ path: 'comment', select: '_id name' })
     .then((todoResult: any) => {
       if (todoResult.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
@@ -132,6 +133,12 @@ export const getTodo = (req: any, res: any) => {
           }
         }
       });
+
+      if (todoFilter.length === 0) {
+        return res.status(STATUS_BAD_REQUEST).json({
+          message: 'No Todo found'
+        });
+      }
 
       return res.status(STATUS_OK).json({
         todo: todoFilter,

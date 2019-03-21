@@ -57,6 +57,7 @@ commentRouter.post('/create', createComment);
  * @apiGroup Comment
  * @apiParam {string} [id] Optimal Id of Comment
  * @apiParam {string} [name] Optional Name of Comment
+ * @apiParam {string} [todo] Optional Id of Todo
  * @apiParamExample {json} Input
  *    {
  *      "id": "5c920f50cdd88440784419f7",

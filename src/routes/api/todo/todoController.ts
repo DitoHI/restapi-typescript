@@ -8,6 +8,7 @@ const STATUS_BAD_REQUEST = 400;
 const STATUS_NOT_ACCEPTABLE = 406;
 
 const todoMongooseModel = mongoose.model('Todo');
+const commentMongooseModel = mongoose.model('Comment');
 const todoListMongooseModel = mongoose.model('TodoList');
 
 export const createTodo = (req: any, res: any) => {
@@ -235,10 +236,22 @@ export const deleteToDo = (req: any, res: any) => {
         .select('_id name')
         .then((todoListResult) => {
 
+          // delete comment in ToDo
+          todoDeleted.comment.forEach((commentInTodo: any) => {
+            commentMongooseModel
+              .findByIdAndDelete(commentInTodo)
+              .exec()
+              .catch(() => {
+                return res.status(STATUS_BAD_REQUEST).json({
+                  message: 'Error in deleting comment in Todo'
+                });
+              });
+          });
+
           return res.status(STATUS_OK).json({
             todo: todoDeleted,
             todoList: todoListResult,
-            message: 'Todo deleted'
+            message: 'Todo and its comments deleted'
           });
         })
         .catch((err) => {

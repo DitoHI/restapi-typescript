@@ -243,7 +243,7 @@ export const deleteToDo = (req: any, res: any) => {
               .exec()
               .catch(() => {
                 return res.status(STATUS_BAD_REQUEST).json({
-                  message: 'Error in deleting comment in Todo'
+                  message: 'Error in deleting comments in Todo'
                 });
               });
           });

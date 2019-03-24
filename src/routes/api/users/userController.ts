@@ -33,12 +33,16 @@ const getUserAll = (req: any, res: any) => {
     .exec()
     .then((users) => {
       return res.status(statusCode).json({
-        body: users
+        success: true,
+        data: {
+          users
+        },
       });
     })
     .catch(() => {
       statusCode = 400;
       return res.status(statusCode).json({
+        success: false,
         message: 'Failed to fetch all users'
       });
     });
@@ -55,6 +59,7 @@ const getUserFromToken = (req: any, res: any, next: any) => {
         message = 'User not found';
         return res.status(statusCode).json({
           message,
+          success: false,
         });
       }
 
@@ -62,6 +67,7 @@ const getUserFromToken = (req: any, res: any, next: any) => {
         message = 'Token expired';
         return res.status(statusCode).json({
           message,
+          success: false,
         });
       }
 
@@ -83,7 +89,8 @@ const verifyToken = (req: any, res: any, next: any) => {
     statusCode = 400;
     message = 'No token provided';
     return res.status(statusCode).json({
-      message
+      message,
+      success: false,
     });
   }
 
@@ -93,7 +100,7 @@ const verifyToken = (req: any, res: any, next: any) => {
       message = 'Failed to authenticate token';
       return res.status(statusCode).json({
         message,
-        token
+        success: false,
       });
     }
 
@@ -107,7 +114,8 @@ const verifyToken = (req: any, res: any, next: any) => {
 const addUser = async (req: any, res: any) => {
   if (!req.body.name || !req.body.username || !req.body.email || !req.body.password) {
     return res.status(400).json({
-      message: 'Please fill the form'
+      message: 'Please fill the form',
+      success: false,
     });
   }
 
@@ -136,7 +144,8 @@ const addUser = async (req: any, res: any) => {
         statusCode = 400;
         messageLog = err;
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -151,9 +160,11 @@ const addUser = async (req: any, res: any) => {
       statusCode = 200;
       messageLog = 'User has been saved';
       return res.status(statusCode).json({
-        token,
-        message: messageLog,
-        body: user,
+        data: {
+          token,
+          user,
+        },
+        success: true,
       });
 
     });
@@ -210,7 +221,8 @@ const getUser = (req: any, res: any) => {
         statusCode = 400;
         messageLog = 'Failed finding at MongoDB';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -219,7 +231,8 @@ const getUser = (req: any, res: any) => {
         statusCode = 404;
         messageLog = 'No user found';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -229,7 +242,8 @@ const getUser = (req: any, res: any) => {
           statusCode = 404;
           messageLog = 'Please check your password';
           return res.status(statusCode).json({
-            message: messageLog
+            message: messageLog,
+            success: false,
           });
         }
       }
@@ -245,9 +259,11 @@ const getUser = (req: any, res: any) => {
       statusCode = 200;
       messageLog = 'Successfully login';
       return res.status(statusCode).json({
-        token,
-        message: messageLog,
-        body: users,
+        data: {
+          token,
+          users,
+        },
+        success: true,
       });
 
     });
@@ -266,7 +282,8 @@ const updateUser = (req: any, res: any) => {
   if (!req.body.newUsername && !req.body.newEmail) {
     messageLog = 'Please fill the form';
     return res.status(statusCode).json({
-      message: messageLog
+      message: messageLog,
+      success: false,
     });
   }
 
@@ -292,7 +309,8 @@ const updateUser = (req: any, res: any) => {
         statusCode = 404;
         messageLog = 'No user found';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -300,7 +318,8 @@ const updateUser = (req: any, res: any) => {
         statusCode = 404;
         messageLog = 'Please input your password';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -309,7 +328,8 @@ const updateUser = (req: any, res: any) => {
         statusCode = 404;
         messageLog = 'Please check your password';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -339,12 +359,15 @@ const updateUser = (req: any, res: any) => {
                                statusCode = 400;
                                messageLog = `Failed updating user[_id: ${outputChild._id}]`;
                                return res.status(statusCode).json({
-                                 message: messageLog
+                                 message: messageLog,
+                                 success: false,
                                });
                              }
                              return res.status(statusCode).json({
-                               body: outputChild,
-                               message: 'User updated'
+                               data: {
+                                 user: outputChild,
+                               },
+                               success: true,
                              });
                            });
     });
@@ -385,7 +408,8 @@ const deleteUser = (req: any, res: any) => {
         statusCode = 400;
         messageLog = 'No user found';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -394,7 +418,8 @@ const deleteUser = (req: any, res: any) => {
         statusCode = 404;
         messageLog = 'Please check your password';
         return res.status(statusCode).json({
-          message: messageLog
+          message: messageLog,
+          success: false,
         });
       }
 
@@ -407,7 +432,8 @@ const deleteUser = (req: any, res: any) => {
                 statusCode = 400;
                 messageLog = 'Failed deleting user';
                 return res.status(statusCode).json({
-                  message: messageLog
+                  message: messageLog,
+                  success: false,
                 });
               }
             });
@@ -425,8 +451,10 @@ const deleteUser = (req: any, res: any) => {
       statusCode = 200;
       messageLog = 'User deleted';
       return res.status(statusCode).json({
-        message: messageLog,
-        body: usersClone[0]
+        data: {
+          user: usersClone[0],
+        },
+        success: true,
       });
     });
 };

@@ -18,16 +18,6 @@ const FAILED_RESPONSE = 400;
  * @api {get} /user/me Get LoggedIn User
  * @apiHeader {string} Authorization Bearer
  * @apiGroup User
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": {
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com",
- *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
- *      }
- *      "message" : "Authenticate success"
- *    }
  * @apiErrorExample {json} No token provided
  *    HTTP/1.1 400 FAILED {
  *      "message" : "No token provided"
@@ -62,13 +52,6 @@ userRoutes
  * @apiParam {string} email Email
  * @apiParam {string} password Password
  * @apiParam {string} [userOriginalProfile] Optional Image Profile
- * @apiParamExample {json} Input
- *    {
- *      "name": "dito",
- *      "username": "dito",
- *      "email": "ditohafizh@gmail.com",
- *      "password": "dito"
- *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK {
  *      "body": {
@@ -110,12 +93,6 @@ userRoutes
  *    {
  *      "userOriginalProfile": "Nicho_SmartCard.jpg"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": "public/user/photos/new/dito/dito_1553009709342.png",
- *      "message" : "Profile image updated successfully"
- *    }
- *
  * @apiErrorExample {json} No token provided
  *    HTTP/1.1 400 FAILED {
  *      "message" : "No token provided"
@@ -148,8 +125,10 @@ userRoutes
           userController.uploadProfile(req, res)
             .then((result) => {
               return res.status(SUCCESS_RESPONSE).json({
-                body: result,
-                message: 'Profile image updated successfully'
+                data: {
+                  user: result,
+                },
+                success: true,
               });
             })
             .catch((err) => {
@@ -159,18 +138,21 @@ userRoutes
                 deleteFile(req.file.path)
                   .then(() => {
                     return res.status(SUCCESS_RESPONSE).json({
-                      message: 'Profile image updated successfully'
+                      message: 'Profile image updated successfully',
+                      success: true,
                     });
                   })
                   .catch((errChild) => {
                     return res.status(FAILED_RESPONSE).json({
-                      message: 'Failed to update profile'
+                      message: 'Failed to update profile',
+                      success: false,
                     });
                   });
               }
 
               return res.status(FAILED_RESPONSE).json({
-                message: err
+                message: err,
+                success: false,
               });
             });
         });
@@ -181,25 +163,6 @@ userRoutes
  * @apiParam {string} email Email
  * @apiParam {string} [username] Optional if email is not provided
  * @apiParam {string} password Password
- * @apiParamExample {json} Input
- *    {
- *      "email": "ditohafizh@gmail.com",
- *      "password": "dito"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": {
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com",
- *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
- *      },
- *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNjVlN
- *      DIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk4OTQwLCJleHAiOjE1NTMwODUzNDB9.
- *      qCpME4gseNaz5eupZCq4gGPHabvE8fE5TimuDh0Rohg",
- *      "message" : "Successfully login"
- *    }
- *
  * @apiErrorExample {json} Form not filled
  *    HTTP/1.1 400 FAILED {
  *      "message" : "Please specify name, username, or password"
@@ -228,22 +191,6 @@ userRoutes
  * @apiParam {string} [newEmail] Optional New email to update
  * @apiParam {string} [newPassword] Optional New password to update
  * @apiParam {string} password Password (if not provided then will return error)
- * @apiParamExample {json} Input
- *    {
- *      "newEmail": "ditohafizh__baru@gmail.com",
- *      "password": "dito"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": {
- *        "name": "Dito Hafizh",
- *        "username": "dito",
- *        "email": "ditohafizh__baru@gmail.com",
- *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq"
- *      }
- *      "message" : "User updated"
- *    }
- *
  * @apiErrorExample {json} No token provided
  *    HTTP/1.1 400 FAILED {
  *      "message" : "No token provided"
@@ -286,18 +233,6 @@ userRoutes
  *    {
  *      "password": "dito"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": {
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh__baru@gmail.com",
- *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
- *        "userOriginalProfile": "public/user/photos/new/dito/dito_1553009709342.png"
- *      }
- *      "message" : "User deleted"
- *    }
- *
  * @apiErrorExample {json} No token provided
  *    HTTP/1.1 400 FAILED {
  *      "message" : "No token provided"

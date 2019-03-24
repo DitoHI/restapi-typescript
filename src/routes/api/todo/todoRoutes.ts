@@ -24,18 +24,6 @@ todoRoutes.get('/test', (req, res) => { res.send('Welcome to ToDo Routes'); });
  *		    "Out"
  *	    ]
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todo": {
- *        "name": "Love is eternal",
- *        "note": "Love Testing"
- *      },
- *      "_id": "5c91fe27c25ae422b43e842f",
- *      "createdBy": {
- *        "name": "dito"
- *      }
- *      "message": "Check out new Todo inside your TodoList"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please input the name of your Todo"
@@ -78,26 +66,6 @@ todoRoutes.post('/read', getTodo);
  *      "id": "5c9152034916d83aee01790e",
  *      "name" : "Love in unlimited"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todo": {
- *        "name": "Love in unlimited",
- *        "note": "Love Testing",
- *        "comment": [
- *          "Check",
- *          "It",
- *          "Out"
- *         ],
- *         "_id": "5c9152034916d83aee01790e",
- *         "todoList": {
- *           "name": "Love",
- *           "user": [
- *             "5c91447dfb84481adf4d4443"
- *           ]
- *         }
- *      },
- *      "message": "Todo updated"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please specify id"
@@ -125,28 +93,6 @@ todoRoutes.put('/update', updateTodo);
  * @apiParamExample {json} Input
  *    {
  *      "id": "5c9164ab1af5a46d38b3899b"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todo": {
- *        "name": "Love is eternal",
- *        "note": "Love Testing",
- *        "comment": [
- *          "Check",
- *          "It",
- *          "Out"
- *         ],
- *         "_id": "5c9164ab1af5a46d38b3899b",
- *         "todoList": {
- *           "todo": [],
- *           "_id": "5c9164971af5a46d38b3899a"
- *         }
- *      },
- *      "todoList": {
- *        "name": "Love",
- *        "_id": "5c9164971af5a46d38b3899a"
- *      },
- *      "message": "Todo deleted"
  *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {

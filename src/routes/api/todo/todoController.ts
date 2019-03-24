@@ -14,20 +14,23 @@ const todoListMongooseModel = mongoose.model('TodoList');
 export const createTodo = (req: any, res: any) => {
   if (!req.body.name) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please input the name of your Todo'
+      message: 'Please input the name of your Todo',
+      success: false,
     });
   }
 
   if (!req.body.todoList) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please input the id of your TodoList'
+      message: 'Please input the id of your TodoList',
+      success: false,
     });
   }
 
   const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.todoList);
   if (!isValidObjectId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Invalid Id type'
+      message: 'Invalid Id type',
+      success: false,
     });
   }
 
@@ -46,7 +49,8 @@ export const createTodo = (req: any, res: any) => {
             return todoMongooseModel
               .findByIdAndDelete(todoResult._id).exec().then(() => {
                 return res.status(STATUS_BAD_REQUEST).json({
-                  message: 'TodoList not found'
+                  message: 'TodoList not found',
+                  success: false,
                 });
               });
           }
@@ -63,26 +67,31 @@ export const createTodo = (req: any, res: any) => {
             .populate({ path: 'createdBy', select: 'name username email' })
             .then((todoListUpdatedResult: any) => {
               return res.status(STATUS_CREATED).json({
-                todoList: todoListUpdatedResult,
-                message: 'Check out new Todo inside your TodoList'
+                data: {
+                  todoList: todoListUpdatedResult,
+                },
+                success: true,
               });
             })
             .catch(() => {
               return res.status(STATUS_BAD_REQUEST).json({
-                message: 'Error in updating todoList inside todo'
+                message: 'Error in updating todoList inside todo',
+                success: false,
               });
             });
         })
         .catch(() => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Error in updating todoList inside todo'
+            message: 'Error in updating todoList inside todo',
+            success: false,
           });
         });
 
     })
     .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: err
+        message: err,
+        success: false,
       });
     });
 };
@@ -92,7 +101,8 @@ export const getTodo = (req: any, res: any) => {
     const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
     if (!isValidObjectId) {
       return res.status(STATUS_NOT_ACCEPTABLE).json({
-        message: 'Invalid Id type'
+        message: 'Invalid Id type',
+        success: false,
       });
     }
   }
@@ -121,7 +131,8 @@ export const getTodo = (req: any, res: any) => {
     .then((todoResult: any) => {
       if (todoResult.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No Todo found'
+          message: 'No Todo found',
+          success: false,
         });
       }
 
@@ -137,18 +148,22 @@ export const getTodo = (req: any, res: any) => {
 
       if (todoFilter.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No Todo found'
+          message: 'No Todo found',
+          success: false,
         });
       }
 
       return res.status(STATUS_OK).json({
-        todo: todoFilter,
-        message: 'ToDo found'
+        data: {
+          todo: todoFilter,
+        },
+        success: true,
       });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Not getting any ToDo'
+        message: 'Not getting any ToDo',
+        success: false,
       });
     });
 };
@@ -156,14 +171,16 @@ export const getTodo = (req: any, res: any) => {
 export const updateTodo = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the id'
+      message: 'Please specify the id',
+      success: false,
     });
   }
 
   const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
   if (!isValidObjectId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Invalid Id type'
+      message: 'Invalid Id type',
+      success: false,
     });
   }
 
@@ -182,18 +199,22 @@ export const updateTodo = (req: any, res: any) => {
     .then((todoResult: any) => {
       if (!todoResult) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'ToDo not found'
+          message: 'ToDo not found',
+          success: false,
         });
       }
 
       return res.status(STATUS_OK).json({
-        todo: todoResult,
-        message: 'ToDo updated'
+        data: {
+          todo: todoResult,
+        },
+        success: true,
       });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Error in updating ToDo'
+        message: 'Error in updating ToDo',
+        success: false,
       });
     });
 };
@@ -201,14 +222,16 @@ export const updateTodo = (req: any, res: any) => {
 export const deleteToDo = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the id'
+      message: 'Please specify the id',
+      success: false,
     });
   }
 
   const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
   if (!isValidObjectId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Invalid Id type'
+      message: 'Invalid Id type',
+      success: false,
     });
   }
 
@@ -218,7 +241,8 @@ export const deleteToDo = (req: any, res: any) => {
     .then((todoDeleted: any) => {
       if (!todoDeleted) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'ToDo not found'
+          message: 'ToDo not found',
+          success: false,
         });
       }
 
@@ -226,7 +250,8 @@ export const deleteToDo = (req: any, res: any) => {
       const indexOfTodoinTodoList = todoDeleted.todoList.todo.indexOf(todoDeleted._id);
       if (indexOfTodoinTodoList < 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'Finding Todo inside TodoList failed'
+          message: 'Finding Todo inside TodoList failed',
+          success: false,
         });
       }
       todoDeleted.todoList.todo.splice(indexOfTodoinTodoList, 1);
@@ -243,26 +268,31 @@ export const deleteToDo = (req: any, res: any) => {
               .exec()
               .catch(() => {
                 return res.status(STATUS_BAD_REQUEST).json({
-                  message: 'Error in deleting comments in Todo'
+                  message: 'Error in deleting comments in Todo',
+                  success: false,
                 });
               });
           });
 
           return res.status(STATUS_OK).json({
-            todo: todoDeleted,
-            todoList: todoListResult,
-            message: 'Todo and its comments deleted'
+            data: {
+              todo: todoDeleted,
+              todoList: todoListResult,
+            },
+            success: true,
           });
         })
         .catch((err) => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Error updating TodoList inside ToDO'
+            message: 'Error updating TodoList inside ToDo',
+            success: false,
           });
         });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Error in deleting ToDO'
+        message: 'Error in deleting ToDO',
+        success: false,
       });
     });
 };

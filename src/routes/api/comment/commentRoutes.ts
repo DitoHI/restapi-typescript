@@ -7,7 +7,7 @@ import { createComment, deleteComment, getComment } from './commentController';
 commentRouter.get('/test', (req, res) => { res.send('Welcome to Comment Routes'); });
 
 /**
- * @api {post} /user/comment/create Create a comment
+ * @api {post} /api/user/comment/create Create a comment
  * @apiGroup Comment
  * @apiParam {string} todo Id of Todo
  * @apiParam {string} [name] Optional Name of Comment
@@ -36,7 +36,7 @@ commentRouter.get('/test', (req, res) => { res.send('Welcome to Comment Routes')
 commentRouter.post('/create', createComment);
 
 /**
- * @api {post} /user/comment/read Get comments
+ * @api {post} /api/user/comment/read Get comments
  * @apiGroup Comment
  * @apiParam {string} [id] Optimal Id of Comment
  * @apiParam {string} [name] Optional Name of Comment
@@ -61,7 +61,7 @@ commentRouter.post('/create', createComment);
 commentRouter.post('/read', getComment);
 
 /**
- * @api {delete} /user/comment/delete Delete a comment
+ * @api {delete} /api/user/comment/delete Delete a comment
  * @apiGroup Comment
  * @apiParam {string} [id] Optimal Id of Comment
  * @apiParamExample {json} Input

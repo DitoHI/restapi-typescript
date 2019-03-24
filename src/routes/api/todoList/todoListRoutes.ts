@@ -15,7 +15,7 @@ todoListRoutes.get('/test', (req, res) => {
 });
 
 /**
- * @api {post} /user/todoList/create Create a TodoList
+ * @api {post} /api/user/todoList/create Create a TodoList
  * @apiGroup TodoList
  * @apiParam {string} name Category of Todo
  * @apiParamExample {json} Input
@@ -42,7 +42,7 @@ todoListRoutes.get('/test', (req, res) => {
 todoListRoutes.post('/create', createTodoList);
 
 /**
- * @api {post} /user/todoList/read Get list of TodoList
+ * @api {post} /api/user/todoList/read Get list of TodoList
  * @apiGroup TodoList
  * @apiParam {string} [name] optional Category of Todo (case insensitive)
  * @apiParam {string} [id] optional Id of TodoList
@@ -62,7 +62,7 @@ todoListRoutes.post('/create', createTodoList);
 todoListRoutes.post('/read', readTodoList);
 
 /**
- * @api {put} /user/todoList/update Update the name of TodoList
+ * @api {put} /api/user/todoList/update Update the name of TodoList
  * @apiGroup TodoList
  * @apiParam {string} id Id of TodoList
  * @apiParam {string} name new name of TodoList
@@ -95,7 +95,7 @@ todoListRoutes.post('/read', readTodoList);
 todoListRoutes.put('/update', updateTodoList);
 
 /**
- * @api {delete} /user/todoList/delete Delete a TodoList
+ * @api {delete} /api/user/todoList/delete Delete a TodoList
  * @apiDescription Delete the id in TodoList and User simultaneously
  * @apiGroup TodoList
  * @apiParam {string} id Id of TodoList
@@ -123,7 +123,7 @@ todoListRoutes.put('/update', updateTodoList);
 todoListRoutes.delete('/delete', deleteTodoList);
 
 /**
- * @api {post} /user/todoList/addUserAccess Add user access to TodoList
+ * @api {post} /api/user/todoList/addUserAccess Add user access to TodoList
  * @apiGroup TodoList
  * @apiParam {string[]} userId Array of userId
  * @apiParamExample {json} Input

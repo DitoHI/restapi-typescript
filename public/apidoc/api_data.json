@@ -1,7 +1,7 @@
 [
   {
     "type": "delete",
-    "url": "/user/comment/delete",
+    "url": "/api/user/comment/delete",
     "title": "Delete a comment",
     "group": "Comment",
     "parameter": {
@@ -24,15 +24,6 @@
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n      \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n    ],\n   \"_id\": \"5c9152034916d83aee01790e\",\n   \"todoList\": { 5c91fe27c25ae422b43e842f }\n   \"message\": \"Comment deleted and Todo updated\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -50,11 +41,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/comment/commentRoutes.ts",
     "groupTitle": "Comment",
-    "name": "DeleteUserCommentDelete"
+    "name": "DeleteApiUserCommentDelete"
   },
   {
     "type": "post",
-    "url": "/user/comment/create",
+    "url": "/api/user/comment/create",
     "title": "Create a comment",
     "group": "Comment",
     "parameter": {
@@ -80,15 +71,6 @@
         {
           "title": "Input",
           "content": "{\n  \"todo\": \"5c920e969dbbe53eb7368f92\",\n  \"name\" : \"Yes, I love it two\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love in unlimited\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n        \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": { 5c91fe27c25ae422b43e842f }\n  },\n  \"message\": \"Check out your new comments inside this Todo\"\n}",
           "type": "json"
         }
       ]
@@ -120,11 +102,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/comment/commentRoutes.ts",
     "groupTitle": "Comment",
-    "name": "PostUserCommentCreate"
+    "name": "PostApiUserCommentCreate"
   },
   {
     "type": "post",
-    "url": "/user/comment/read",
+    "url": "/api/user/comment/read",
     "title": "Get comments",
     "group": "Comment",
     "parameter": {
@@ -161,15 +143,6 @@
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"comment\": [\n      {\n        \"name\": \"Yes, I love it two\",\n      \"_id\": \"5c920f50cdd88440784419f7\",\n        \"createdAt\": \"2019-03-20T10:00:48.407Z\"\n      }\n    ],\n   \"_id\": \"5c9152034916d83aee01790e\",\n   \"todoList\": { 5c91fe27c25ae422b43e842f }\n   \"message\": \"Check out your new comments inside this Todo\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -192,11 +165,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/comment/commentRoutes.ts",
     "groupTitle": "Comment",
-    "name": "PostUserCommentRead"
+    "name": "PostApiUserCommentRead"
   },
   {
     "type": "delete",
-    "url": "/user/todo/delete",
+    "url": "/api/user/todo/delete",
     "title": "Delete a Todo",
     "description": "<p>Delete the id in Todo, ToDoList, and User simultaneously</p>",
     "group": "Todo",
@@ -252,11 +225,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todo/todoRoutes.ts",
     "groupTitle": "Todo",
-    "name": "DeleteUserTodoDelete"
+    "name": "DeleteApiUserTodoDelete"
   },
   {
     "type": "delete",
-    "url": "/user/todoList/delete",
+    "url": "/api/user/todoList/delete",
     "title": "Delete a TodoList",
     "description": "<p>Delete the id in TodoList and User simultaneously</p>",
     "group": "TodoList",
@@ -307,11 +280,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "DeleteUserTodolistDelete"
+    "name": "DeleteApiUserTodolistDelete"
   },
   {
     "type": "post",
-    "url": "/user/todoList/addUserAccess",
+    "url": "/api/user/todoList/addUserAccess",
     "title": "Add user access to TodoList",
     "group": "TodoList",
     "parameter": {
@@ -361,11 +334,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "PostUserTodolistAdduseraccess"
+    "name": "PostApiUserTodolistAdduseraccess"
   },
   {
     "type": "post",
-    "url": "/user/todoList/create",
+    "url": "/api/user/todoList/create",
     "title": "Create a TodoList",
     "group": "TodoList",
     "parameter": {
@@ -415,11 +388,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "PostUserTodolistCreate"
+    "name": "PostApiUserTodolistCreate"
   },
   {
     "type": "post",
-    "url": "/user/todoList/read",
+    "url": "/api/user/todoList/read",
     "title": "Get list of TodoList",
     "group": "TodoList",
     "parameter": {
@@ -466,11 +439,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "PostUserTodolistRead"
+    "name": "PostApiUserTodolistRead"
   },
   {
     "type": "put",
-    "url": "/user/todoList/update",
+    "url": "/api/user/todoList/update",
     "title": "Update the name of TodoList",
     "group": "TodoList",
     "parameter": {
@@ -532,11 +505,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todoList/todoListRoutes.ts",
     "groupTitle": "TodoList",
-    "name": "PutUserTodolistUpdate"
+    "name": "PutApiUserTodolistUpdate"
   },
   {
     "type": "post",
-    "url": "/user/todo/create",
+    "url": "/api/user/todo/create",
     "title": "Create a Todo",
     "group": "Todo",
     "parameter": {
@@ -609,11 +582,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todo/todoRoutes.ts",
     "groupTitle": "Todo",
-    "name": "PostUserTodoCreate"
+    "name": "PostApiUserTodoCreate"
   },
   {
     "type": "post",
-    "url": "/user/todo/read",
+    "url": "/api/user/todo/read",
     "title": "Get a Todo",
     "group": "Todo",
     "parameter": {
@@ -660,11 +633,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todo/todoRoutes.ts",
     "groupTitle": "Todo",
-    "name": "PostUserTodoRead"
+    "name": "PostApiUserTodoRead"
   },
   {
     "type": "put",
-    "url": "/user/todo/update",
+    "url": "/api/user/todo/update",
     "title": "Update a Todo",
     "group": "Todo",
     "parameter": {
@@ -735,11 +708,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/todo/todoRoutes.ts",
     "groupTitle": "Todo",
-    "name": "PutUserTodoUpdate"
+    "name": "PutApiUserTodoUpdate"
   },
   {
     "type": "delete",
-    "url": "/user/delete",
+    "url": "/api/user/delete",
     "title": "Delete User",
     "header": {
       "fields": {
@@ -812,11 +785,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "DeleteUserDelete"
+    "name": "DeleteApiUserDelete"
   },
   {
     "type": "get",
-    "url": "/user/me",
+    "url": "/api/user/me",
     "title": "Get LoggedIn User",
     "header": {
       "fields": {
@@ -859,7 +832,7 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "GetUserMe"
+    "name": "GetApiUserMe"
   },
   {
     "type": "get",
@@ -873,7 +846,7 @@
   },
   {
     "type": "post",
-    "url": "/user/create",
+    "url": "/api/user/create",
     "title": "Create an User",
     "group": "User",
     "parameter": {
@@ -917,15 +890,6 @@
         ]
       }
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n    \"userOriginalProfile\": null\n  }\n  \"message\" : \"User has been saved\",\n  \"token\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNj\n  VlNDIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk2OTQyLCJleHAiOjE1NTMw\n  ODMzNDJ9.8wNFi061cTzOx7IH811urfFa9ME_7AQaQ8LaMxbKsuw\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -948,11 +912,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "PostUserCreate"
+    "name": "PostApiUserCreate"
   },
   {
     "type": "post",
-    "url": "/user/login",
+    "url": "/api/user/login",
     "title": "Login User",
     "group": "User",
     "parameter": {
@@ -1009,11 +973,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "PostUserLogin"
+    "name": "PostApiUserLogin"
   },
   {
     "type": "post",
-    "url": "/user/upload",
+    "url": "/api/user/upload",
     "title": "Upload Photo Profile",
     "header": {
       "fields": {
@@ -1086,11 +1050,11 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "PostUserUpload"
+    "name": "PostApiUserUpload"
   },
   {
     "type": "put",
-    "url": "/user/update",
+    "url": "/api/user/update",
     "title": "Update User",
     "header": {
       "fields": {
@@ -1182,6 +1146,6 @@
     "version": "0.0.0",
     "filename": "src/routes/api/users/userRoutes.ts",
     "groupTitle": "User",
-    "name": "PutUserUpdate"
+    "name": "PutApiUserUpdate"
   }
 ]

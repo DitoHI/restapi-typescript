@@ -15,7 +15,7 @@ const SUCCESS_RESPONSE = 200;
 const FAILED_RESPONSE = 400;
 
 /**
- * @api {get} /user/me Get LoggedIn User
+ * @api {get} /api/user/me Get LoggedIn User
  * @apiHeader {string} Authorization Bearer
  * @apiGroup User
  * @apiErrorExample {json} No token provided
@@ -45,27 +45,13 @@ userRoutes
        });
 
 /**
- * @api {post} /user/create Create an User
+ * @api {post} /api/user/create Create an User
  * @apiGroup User
  * @apiParam {string} name Name
  * @apiParam {string} username Username
  * @apiParam {string} email Email
  * @apiParam {string} password Password
  * @apiParam {string} [userOriginalProfile] Optional Image Profile
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "body": {
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com",
- *        "password": "$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq",
- *        "userOriginalProfile": null
- *      }
- *      "message" : "User has been saved",
- *      "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNj
- *      VlNDIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk2OTQyLCJleHAiOjE1NTMw
- *      ODMzNDJ9.8wNFi061cTzOx7IH811urfFa9ME_7AQaQ8LaMxbKsuw"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 400 FAILED {
  *      "message" : "Please fill the form"
@@ -85,7 +71,7 @@ userRoutes
         userController.addUser);
 
 /**
- * @api {post} /user/upload Upload Photo Profile
+ * @api {post} /api/user/upload Upload Photo Profile
  * @apiHeader {string} Authorization Bearer
  * @apiGroup User
  * @apiParam {string} userOriginalProfile Image Profile
@@ -158,7 +144,7 @@ userRoutes
         });
 
 /**
- * @api {post} /user/login Login User
+ * @api {post} /api/user/login Login User
  * @apiGroup User
  * @apiParam {string} email Email
  * @apiParam {string} [username] Optional if email is not provided
@@ -184,7 +170,7 @@ userRoutes
   .post('/login', userController.getUser);
 
 /**
- * @api {put} /user/update Update User
+ * @api {put} /api/user/update Update User
  * @apiHeader {string} Authorization Bearer
  * @apiGroup User
  * @apiParam {string} [newUsername] Optional New username to update
@@ -225,7 +211,7 @@ userRoutes
        userController.updateUser);
 
 /**
- * @api {delete} /user/delete Delete User
+ * @api {delete} /api/user/delete Delete User
  * @apiHeader {string} Authorization Bearer
  * @apiGroup User
  * @apiParam {string} password Password (if not provided then will return error)

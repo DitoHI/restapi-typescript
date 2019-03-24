@@ -7,7 +7,7 @@ import { createTodo, deleteToDo, getTodo, updateTodo } from './todoController';
 todoRoutes.get('/test', (req, res) => { res.send('Welcome to ToDo Routes'); });
 
 /**
- * @api {post} /user/todo/create Create a Todo
+ * @api {post} /api/user/todo/create Create a Todo
  * @apiGroup Todo
  * @apiParam {string} todoList Id of TodoList
  * @apiParam {string} [name="Empty ToDo"] Optional Name of Todo
@@ -44,7 +44,7 @@ todoRoutes.get('/test', (req, res) => { res.send('Welcome to ToDo Routes'); });
 todoRoutes.post('/create', createTodo);
 
 /**
- * @api {post} /user/todo/read Get a Todo
+ * @api {post} /api/user/todo/read Get a Todo
  * @apiGroup Todo
  * @apiParam {string} [id] optional Id of Todo
  * @apiParam {string} [name] Optional if id is not provided. Name of Todo
@@ -55,7 +55,7 @@ todoRoutes.post('/create', createTodo);
 todoRoutes.post('/read', getTodo);
 
 /**
- * @api {put} /user/todo/update Update a Todo
+ * @api {put} /api/user/todo/update Update a Todo
  * @apiGroup Todo
  * @apiParam {string} id Id of Todo
  * @apiParam {string} [name] Optional New Name of Todo
@@ -86,7 +86,7 @@ todoRoutes.post('/read', getTodo);
 todoRoutes.put('/update', updateTodo);
 
 /**
- * @api {delete} /user/todo/delete Delete a Todo
+ * @api {delete} /api/user/todo/delete Delete a Todo
  * @apiDescription Delete the id in Todo, ToDoList, and User simultaneously
  * @apiGroup Todo
  * @apiParam {string} id Id of Todo

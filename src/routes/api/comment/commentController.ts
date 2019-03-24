@@ -13,7 +13,8 @@ const commentMongooseModel = mongoose.model('Comment');
 export const createComment = (req: any, res: any) => {
   if (!req.body.todo) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please input the Todo Id'
+      message: 'Please input the Todo Id',
+      success: false,
     });
   }
 
@@ -41,30 +42,36 @@ export const createComment = (req: any, res: any) => {
             .then((todoUpdatedResult: any) => {
               if (!todoUpdatedResult) {
                 return res.status(STATUS_BAD_REQUEST).json({
-                  message: 'There is no Todo which is updated'
+                  message: 'There is no Todo which is updated',
+                  success: false,
                 });
               }
 
               return res.status(STATUS_OK).json({
-                todo: todoUpdatedResult,
-                message: 'Check out your new comments inside this Todo'
+                data: {
+                  todo: todoUpdatedResult,
+                },
+                success: true,
               });
             })
             .catch(() => {
               return res.status(STATUS_BAD_REQUEST).json({
-                message: 'Failed to update Todo inside Comment'
+                message: 'Failed to update Todo inside Comment',
+                success: false,
               });
             });
         })
         .catch(() => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Failed to update Todo inside Comment'
+            message: 'Failed to update Todo inside Comment',
+            success: false,
           });
         });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Failed of saving comment'
+        message: 'Failed of saving comment',
+        success: false,
       });
     });
 };
@@ -87,13 +94,15 @@ export const getComment = (req: any, res: any) => {
     .then((commentResult: any) => {
       if (!commentResult) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No comment found'
+          message: 'No comment found',
+          success: false,
         });
       }
 
       if (commentResult.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No comment found'
+          message: 'No comment found',
+          success: false,
         });
       }
 
@@ -108,24 +117,30 @@ export const getComment = (req: any, res: any) => {
 
         if (commentFilteredResult.length === 0) {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'No comment found'
+            message: 'No comment found',
+            success: false,
           });
         }
 
         return res.status(STATUS_BAD_REQUEST).json({
-          comment: commentFilteredResult,
-          message: 'Comments found'
+          data: {
+            comment: commentFilteredResult,
+          },
+          success: true,
         });
       }
 
       return res.status(STATUS_BAD_REQUEST).json({
-        comment: commentResult,
-        message: 'Comments found'
+        data: {
+          comment: commentResult,
+        },
+        success: true,
       });
     })
     .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Error in finding comment'
+        message: 'Error in finding comment',
+        success: false,
       });
     });
 };
@@ -133,7 +148,8 @@ export const getComment = (req: any, res: any) => {
 export const deleteComment = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the Comment Id'
+      message: 'Please specify the Comment Id',
+      success: false,
     });
   }
 
@@ -157,24 +173,30 @@ export const deleteComment = (req: any, res: any) => {
             .exec()
             .then((todoUpdatedResult: any) => {
               return res.status(STATUS_OK).json({
-                comment: commentResult,
-                message: 'Comment deleted and Todo updated'
+                data: {
+                  comment: commentResult,
+                  message: 'Comment deleted and Todo updated'
+                },
+                success: true,
               });
             })
             .catch(() => {
               return res.status(STATUS_BAD_REQUEST).json({
-                message: 'Failed to update Todo inside Comment'
+                message: 'Failed to update Todo inside Comment',
+                success: false,
               });
             });
         }).catch(() => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Failed to find Todo inside Comment'
+            message: 'Failed to find Todo inside Comment',
+            success: false,
           });
         });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Failed to remove comment'
+        message: 'Failed to remove comment',
+        success: false,
       });
     });
 };

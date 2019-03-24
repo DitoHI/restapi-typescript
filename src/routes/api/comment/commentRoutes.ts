@@ -16,23 +16,6 @@ commentRouter.get('/test', (req, res) => { res.send('Welcome to Comment Routes')
  *      "todo": "5c920e969dbbe53eb7368f92",
  *      "name" : "Yes, I love it two"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todo": {
- *        "name": "Love in unlimited",
- *        "note": "Love Testing",
- *        "comment": [
- *          {
- *            "name": "Yes, I love it two",
- *            "_id": "5c920f50cdd88440784419f7",
- *            "createdAt": "2019-03-20T10:00:48.407Z"
- *          }
- *         ],
- *         "_id": "5c9152034916d83aee01790e",
- *         "todoList": { 5c91fe27c25ae422b43e842f }
- *      },
- *      "message": "Check out your new comments inside this Todo"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please input the Todo Id"
@@ -62,19 +45,6 @@ commentRouter.post('/create', createComment);
  *    {
  *      "id": "5c920f50cdd88440784419f7",
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "comment": [
- *          {
- *            "name": "Yes, I love it two",
- *          "_id": "5c920f50cdd88440784419f7",
- *            "createdAt": "2019-03-20T10:00:48.407Z"
- *          }
- *        ],
- *       "_id": "5c9152034916d83aee01790e",
- *       "todoList": { 5c91fe27c25ae422b43e842f }
- *       "message": "Check out your new comments inside this Todo"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please specify the parameters"
@@ -97,19 +67,6 @@ commentRouter.post('/read', getComment);
  * @apiParamExample {json} Input
  *    {
  *      "id": "5c920f50cdd88440784419f7",
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "comment": [
- *          {
- *            "name": "Yes, I love it two",
- *          "_id": "5c920f50cdd88440784419f7",
- *            "createdAt": "2019-03-20T10:00:48.407Z"
- *          }
- *        ],
- *       "_id": "5c9152034916d83aee01790e",
- *       "todoList": { 5c91fe27c25ae422b43e842f }
- *       "message": "Comment deleted and Todo updated"
  *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {

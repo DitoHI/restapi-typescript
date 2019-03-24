@@ -15,7 +15,8 @@ const userModelMongooseModel = mongoose.model('User');
 export const createTodoList = (req: any, res: any) => {
   if (!req.body.name) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please input the name of your list'
+      message: 'Please input the name of your list',
+      success: false,
     });
   }
 
@@ -37,7 +38,8 @@ export const createTodoList = (req: any, res: any) => {
 
           if (!userResult) {
             return res.status(STATUS_BAD_REQUEST).json({
-              message: 'Requesting user from TodoList failed'
+              message: 'Requesting user from TodoList failed',
+              success: false,
             });
           }
 
@@ -52,27 +54,32 @@ export const createTodoList = (req: any, res: any) => {
               const userUpdated = userUpdatedResult as IUser;
 
               return res.status(STATUS_CREATED).json({
-                todoList,
-                user: userUpdated,
-                message: 'TodoList Created'
+                data: {
+                  todoList,
+                  user: userUpdated,
+                },
+                success: true,
               });
             })
             .catch((err) => {
               return res.status(STATUS_BAD_REQUEST).json({
-                message: 'Error in updating new ToDoList in User'
+                message: 'Error in updating new ToDoList in User',
+                success: false,
               });
             });
 
         })
         .catch((err) => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Error in updating new ToDoList in User'
+            message: 'Error in updating new ToDoList in User',
+            success: false,
           });
         });
     })
     .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Error saving TodoList'
+        message: 'Error saving TodoList',
+        success: false,
       });
     });
 };
@@ -82,7 +89,8 @@ export const readTodoList = (req: any, res: any) => {
     const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
     if (!isValidObjectId) {
       return res.status(STATUS_NOT_ACCEPTABLE).json({
-        message: 'Id is not valid'
+        message: 'Id is not valid',
+        success: false,
       });
     }
   }
@@ -106,7 +114,8 @@ export const readTodoList = (req: any, res: any) => {
       const todoListArray = todoListResult as ITodoList[];
       if (todoListArray.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No ToDoList found'
+          message: 'No ToDoList found',
+          success: false,
         });
       }
 
@@ -127,14 +136,17 @@ export const readTodoList = (req: any, res: any) => {
 
       if (todoListArrayFiltered.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'No ToDoList found'
+          message: 'No ToDoList found',
+          success: false,
         });
       }
 
       // testing
       return res.status(STATUS_OK).json({
-        message: 'TodoList found',
-        todoList: todoListArrayFiltered,
+        data: {
+          todoList: todoListArrayFiltered,
+        },
+        success: true,
       });
 
     });
@@ -143,20 +155,23 @@ export const readTodoList = (req: any, res: any) => {
 export const updateTodoList = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the id'
+      message: 'Please specify the id',
+      success: false,
     });
   }
 
   if (!req.body.name) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify any new name'
+      message: 'Please specify any new name',
+      success: false,
     });
   }
 
   const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
   if (!isValidObjectId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Invalid Id type'
+      message: 'Invalid Id type',
+      success: false,
     });
   }
 
@@ -167,7 +182,8 @@ export const updateTodoList = (req: any, res: any) => {
     .then((todoListResult) => {
       if (!todoListResult) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'ToDoList not found'
+          message: 'ToDoList not found',
+          success: false,
         });
       }
 
@@ -195,20 +211,24 @@ export const updateTodoList = (req: any, res: any) => {
 
           if (todoListArrayFiltered.length === 0) {
             return res.status(STATUS_BAD_REQUEST).json({
-              message: 'No ToDoList found'
+              message: 'No ToDoList found',
+              success: false,
             });
           }
 
           return res.status(STATUS_OK).json({
-            message: 'TodoList updated',
-            todoList: todoListArrayFiltered,
-            todoListUpdated: todoListResult
+            data: {
+              todoList: todoListArrayFiltered,
+              todoListUpdated: todoListResult,
+            },
+            success: true,
           });
         });
     })
     .catch((err) => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Failed to update TodoList'
+        message: 'Failed to update TodoList',
+        success: false,
       });
     });
 };
@@ -216,14 +236,16 @@ export const updateTodoList = (req: any, res: any) => {
 export const deleteTodoList = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify the id'
+      message: 'Please specify the id',
+      success: false,
     });
   }
 
   const isValidObjectId = mongoose.Types.ObjectId.isValid(req.body.id);
   if (!isValidObjectId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Invalid Id type'
+      message: 'Invalid Id type',
+      success: false,
     });
   }
 
@@ -243,7 +265,8 @@ export const deleteTodoList = (req: any, res: any) => {
 
       if (userIdArray.length === 0) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'TodoList does not have any correlation with the user'
+          message: 'TodoList does not have any correlation with the user',
+          success: false,
         });
       }
 
@@ -260,14 +283,16 @@ export const deleteTodoList = (req: any, res: any) => {
                 .exec()
                 .catch(() => {
                   return res.status(STATUS_BAD_REQUEST).json({
-                    message: 'Error in deleting comments'
+                    message: 'Error in deleting comments',
+                    success: false,
                   });
                 });
             });
           })
           .catch(() => {
             return res.status(STATUS_BAD_REQUEST).json({
-              message: 'Error deleting comments'
+              message: 'Error deleting comments',
+              success: false,
             });
           });
 
@@ -276,7 +301,8 @@ export const deleteTodoList = (req: any, res: any) => {
           .exec()
           .catch(() => {
             return res.status(STATUS_BAD_REQUEST).json({
-              message: 'Error in deleting todos'
+              message: 'Error in deleting todos',
+              success: false,
             });
           });
       });
@@ -290,19 +316,23 @@ export const deleteTodoList = (req: any, res: any) => {
         .exec()
         .then((userResult: any) => {
           return res.status(STATUS_OK).json({
-            user: userResult,
-            message: 'TodoList, todos, comments deleted and User updated'
+            data: {
+              user: userResult,
+            },
+            success: true,
           });
         })
         .catch((err) => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: err
+            message: err,
+            success: false,
           });
         });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Nothing deleted'
+        message: 'Nothing deleted',
+        success: false,
       });
     });
 };
@@ -310,13 +340,15 @@ export const deleteTodoList = (req: any, res: any) => {
 export const addAccessTodoList = (req: any, res: any) => {
   if (!req.body.id) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify your TodoList Id'
+      message: 'Please specify your TodoList Id',
+      success: false,
     });
   }
 
   if (!req.body.userId) {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'Please specify at least one user Id'
+      message: 'Please specify at least one user Id',
+      success: false,
     });
   }
 
@@ -324,18 +356,21 @@ export const addAccessTodoList = (req: any, res: any) => {
     (req.body.userId).forEach((item: any) => {
       if (typeof item !== 'string') {
         return res.status(STATUS_NOT_ACCEPTABLE).json({
-          message: 'One of userId is not string'
+          message: 'One of userId is not string',
+          success: false,
         });
       }
       if (req.user._id.equals(item)) {
         return res.status(STATUS_NOT_ACCEPTABLE).json({
-          message: 'Inputted userId is already an admin'
+          message: 'Inputted userId is already an admin',
+          success: false,
         });
       }
     });
   } else {
     return res.status(STATUS_NOT_ACCEPTABLE).json({
-      message: 'UserId must be array type'
+      message: 'UserId must be array type',
+      success: false,
     });
   }
 
@@ -344,7 +379,8 @@ export const addAccessTodoList = (req: any, res: any) => {
     const valid = mongoose.Types.ObjectId.isValid(userId);
     if (!valid) {
       return res.status(STATUS_NOT_ACCEPTABLE).json({
-        message: 'One of your user Id is not valid type'
+        message: 'One of your user Id is not valid type',
+        success: false,
       });
     }
   }
@@ -355,7 +391,8 @@ export const addAccessTodoList = (req: any, res: any) => {
     .then((todoListResult: any) => {
       if (!todoListResult) {
         return res.status(STATUS_BAD_REQUEST).json({
-          message: 'TodoList not found'
+          message: 'TodoList not found',
+          success: false,
         });
       }
 
@@ -373,24 +410,30 @@ export const addAccessTodoList = (req: any, res: any) => {
         .then((todoListUpdatedResult) => {
           if (!todoListUpdatedResult) {
             return res.status(STATUS_BAD_REQUEST).json({
-              message: 'No TodoList is updated'
+              message: 'No TodoList is updated',
+              success: false,
             });
           }
 
           return res.status(STATUS_OK).json({
-            todoList: todoListUpdatedResult,
-            message: 'TodoList updated'
+            data: {
+              todoList: todoListUpdatedResult,
+              message: 'TodoList updated',
+            },
+            success: true,
           });
         })
         .catch(() => {
           return res.status(STATUS_BAD_REQUEST).json({
-            message: 'Failed in updating TodoList'
+            message: 'Failed in updating TodoList',
+            success: false,
           });
         });
     })
     .catch(() => {
       return res.status(STATUS_BAD_REQUEST).json({
-        message: 'Failed in finding TodoList'
+        message: 'Failed in finding TodoList',
+        success: false,
       });
     });
 

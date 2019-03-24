@@ -22,26 +22,6 @@ todoListRoutes.get('/test', (req, res) => {
  *    {
  *      "name": "college"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "user": {
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com",
- *        "password": "$2b$10$1xMZGhBRcrQUHTHg55Xr8O2Dl1BN5bgDXkBi3KW3wzykGfgDRzoSe",
- *        "todoList": [
- *          "5c911b3540addc3b569c6338"
- *        ],
- *        "isActived": true
- *      },
- *      "todoList" : {
- *        "name": "College",
- *        "user": [
- *          "5c910f036f43302e80088042"
- *        ]
- *      },
- *      "message": "TodoList Created"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please input the name of your list"
@@ -70,22 +50,6 @@ todoListRoutes.post('/create', createTodoList);
  *    {
  *      "name": "family"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "message": "TodoList found",
- *      "todoList": [
- *      {
- *        "name": "family"
- *        "user": [
- *          {
- *            "_id": "5c910f036f43302e80088042",
- *            "name": "dito",
- *            "username": "dito",
- *            "email": "ditohafizh@gmail.com",
- *          }
- *        ],
- *        "_id": "5c912e3aee5fcf5f39536a8a"
- *      }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Id is not valid"
@@ -107,22 +71,6 @@ todoListRoutes.post('/read', readTodoList);
  *      "name": "family first",
  *      "id": "5c912e3aee5fcf5f39536a8a"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "message": "TodoList updated",
- *      "todoList": [
- *      {
- *        "name": "family first"
- *        "user": [
- *          {
- *            "_id": "5c910f036f43302e80088042",
- *            "name": "dito",
- *            "username": "dito",
- *            "email": "ditohafizh@gmail.com",
- *          }
- *        ],
- *        "_id": "5c912e3aee5fcf5f39536a8a"
- *      }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please specify id"
@@ -155,20 +103,6 @@ todoListRoutes.put('/update', updateTodoList);
  *    {
  *      "id": "5c9145246c364b1b8ba73b00"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "user": {
- *        "isActived": true,
- *        "userOriginalProfile": null,
- *        "todoList": [],
- *        "_id": "5c91447dfb84481adf4d4443",
- *        "name": "dito",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com",
- *        "password": "$2b$10$CdqRcZtBi0Nw1qETPjkXl.CSiZOZpG/mVA5/pnPKh5MauYwQ9wdC6",
- *       },
- *      "message": "TodoList deleted and User updated"
- *    }
  * @apiErrorExample {json} Form not completed
  *    HTTP/1.1 406 FAILED {
  *      "message" : "Please specify id"
@@ -199,36 +133,6 @@ todoListRoutes.delete('/delete', deleteTodoList);
  *        "5c91ac442175b7002c1db1dc"
  *      ]
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK {
- *      "todoList": {
- *      "name": "Love",
- *      "user": [
- *      {
- *        "_id": "5c91cc8b2005211a6c4911c6",
- *        "username": "dito",
- *        "email": "ditohafizh@gmail.com"
- *      },
- *      {
- *        "_id": "5c91a3a52175b7002c1db1cd",
- *        "username": "anwar",
- *        "email": "anwarabdullan28@gmail.com"
- *      },
- *      {
- *        "_id": "5c91ac442175b7002c1db1dc",
- *        "username": "anwar2019",
- *        "email": "anwar@example.com"
- *      }
- *    ],
- *    "todo": [],
- *    "_id": "5c91fe27c25ae422b43e842f",
- *    "createdBy": {
- *      "_id": "5c91cc8b2005211a6c4911c6",
- *      "username": "dito",
- *      "email": "ditohafizh@gmail.com"
- *     },
- *      "__v": 0
- *    },
  * "message": "TodoList updated"
  *    }
  * @apiErrorExample {json} Form not completed

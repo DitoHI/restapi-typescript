@@ -143,6 +143,13 @@ define({ "api": [
             "optional": true,
             "field": "name",
             "description": "<p>Optional Name of Comment</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "todo",
+            "description": "<p>Optional Id of Todo</p>"
           }
         ]
       },
@@ -213,15 +220,6 @@ define({ "api": [
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n     \"_id\": \"5c9164ab1af5a46d38b3899b\",\n     \"todoList\": {\n       \"todo\": [],\n       \"_id\": \"5c9164971af5a46d38b3899a\"\n     }\n  },\n  \"todoList\": {\n    \"name\": \"Love\",\n    \"_id\": \"5c9164971af5a46d38b3899a\"\n  },\n  \"message\": \"Todo deleted\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -282,15 +280,6 @@ define({ "api": [
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"user\": {\n    \"isActived\": true,\n    \"userOriginalProfile\": null,\n    \"todoList\": [],\n    \"_id\": \"5c91447dfb84481adf4d4443\",\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$CdqRcZtBi0Nw1qETPjkXl.CSiZOZpG/mVA5/pnPKh5MauYwQ9wdC6\",\n   },\n  \"message\": \"TodoList deleted and User updated\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -340,16 +329,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"id\": \"5c91fe27c25ae422b43e842f\",\n  \"userId\": [\n    \"5c91ac442175b7002c1db1dc\"\n  ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "   HTTP/1.1 200 OK {\n     \"todoList\": {\n     \"name\": \"Love\",\n     \"user\": [\n     {\n       \"_id\": \"5c91cc8b2005211a6c4911c6\",\n       \"username\": \"dito\",\n       \"email\": \"ditohafizh@gmail.com\"\n     },\n     {\n       \"_id\": \"5c91a3a52175b7002c1db1cd\",\n       \"username\": \"anwar\",\n       \"email\": \"anwarabdullan28@gmail.com\"\n     },\n     {\n       \"_id\": \"5c91ac442175b7002c1db1dc\",\n       \"username\": \"anwar2019\",\n       \"email\": \"anwar@example.com\"\n     }\n   ],\n   \"todo\": [],\n   \"_id\": \"5c91fe27c25ae422b43e842f\",\n   \"createdBy\": {\n     \"_id\": \"5c91cc8b2005211a6c4911c6\",\n     \"username\": \"dito\",\n     \"email\": \"ditohafizh@gmail.com\"\n    },\n     \"__v\": 0\n   },\n\"message\": \"TodoList updated\"\n   }",
+          "content": "   {\n     \"id\": \"5c91fe27c25ae422b43e842f\",\n     \"userId\": [\n       \"5c91ac442175b7002c1db1dc\"\n     ]\n   }\n\"message\": \"TodoList updated\"\n   }",
           "type": "json"
         }
       ]
@@ -404,15 +384,6 @@ define({ "api": [
         {
           "title": "Input",
           "content": "{\n  \"name\": \"college\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"user\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$1xMZGhBRcrQUHTHg55Xr8O2Dl1BN5bgDXkBi3KW3wzykGfgDRzoSe\",\n    \"todoList\": [\n      \"5c911b3540addc3b569c6338\"\n    ],\n    \"isActived\": true\n  },\n  \"todoList\" : {\n    \"name\": \"College\",\n    \"user\": [\n      \"5c910f036f43302e80088042\"\n    ]\n  },\n  \"message\": \"TodoList Created\"\n}",
           "type": "json"
         }
       ]
@@ -478,15 +449,6 @@ define({ "api": [
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"message\": \"TodoList found\",\n  \"todoList\": [\n  {\n    \"name\": \"family\"\n    \"user\": [\n      {\n        \"_id\": \"5c910f036f43302e80088042\",\n        \"name\": \"dito\",\n        \"username\": \"dito\",\n        \"email\": \"ditohafizh@gmail.com\",\n      }\n    ],\n    \"_id\": \"5c912e3aee5fcf5f39536a8a\"\n  }",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -534,15 +496,6 @@ define({ "api": [
         {
           "title": "Input",
           "content": "{\n  \"name\": \"family first\",\n  \"id\": \"5c912e3aee5fcf5f39536a8a\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"message\": \"TodoList updated\",\n  \"todoList\": [\n  {\n    \"name\": \"family first\"\n    \"user\": [\n      {\n        \"_id\": \"5c910f036f43302e80088042\",\n        \"name\": \"dito\",\n        \"username\": \"dito\",\n        \"email\": \"ditohafizh@gmail.com\",\n      }\n    ],\n    \"_id\": \"5c912e3aee5fcf5f39536a8a\"\n  }",
           "type": "json"
         }
       ]
@@ -625,15 +578,6 @@ define({ "api": [
         {
           "title": "Input",
           "content": "   {\n     \"todoList\": \"5c914ec607787034e3637c4c\",\n\t    \"name\": \"Love is eternal\",\n\t    \"note\": \"Love Testing\",\n\t    \"comment\": [\n\t\t    \"Check\",\n\t\t    \"It\",\n\t\t    \"Out\"\n\t    ]\n   }",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love is eternal\",\n    \"note\": \"Love Testing\"\n  },\n  \"_id\": \"5c91fe27c25ae422b43e842f\",\n  \"createdBy\": {\n    \"name\": \"dito\"\n  }\n  \"message\": \"Check out new Todo inside your TodoList\"\n}",
           "type": "json"
         }
       ]
@@ -764,15 +708,6 @@ define({ "api": [
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"todo\": {\n    \"name\": \"Love in unlimited\",\n    \"note\": \"Love Testing\",\n    \"comment\": [\n      \"Check\",\n      \"It\",\n      \"Out\"\n     ],\n     \"_id\": \"5c9152034916d83aee01790e\",\n     \"todoList\": {\n       \"name\": \"Love\",\n       \"user\": [\n         \"5c91447dfb84481adf4d4443\"\n       ]\n     }\n  },\n  \"message\": \"Todo updated\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -840,15 +775,6 @@ define({ "api": [
         }
       ]
     },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh__baru@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n    \"userOriginalProfile\": \"public/user/photos/new/dito/dito_1553009709342.png\"\n  }\n  \"message\" : \"User deleted\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -906,15 +832,6 @@ define({ "api": [
       }
     },
     "group": "User",
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n  }\n  \"message\" : \"Authenticate success\"\n}",
-          "type": "json"
-        }
-      ]
-    },
     "error": {
       "examples": [
         {
@@ -998,14 +915,7 @@ define({ "api": [
             "description": "<p>Optional Image Profile</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"name\": \"dito\",\n  \"username\": \"dito\",\n  \"email\": \"ditohafizh@gmail.com\",\n  \"password\": \"dito\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "success": {
       "examples": [
@@ -1070,23 +980,7 @@ define({ "api": [
             "description": "<p>Password</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"email\": \"ditohafizh@gmail.com\",\n  \"password\": \"dito\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"dito\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\",\n  },\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjOTBkYTRkMmUzNjVlN\n  DIwMjczMTE1ZiIsIm5hbWUiOiJkaXRvIiwiaWF0IjoxNTUyOTk4OTQwLCJleHAiOjE1NTMwODUzNDB9.\n  qCpME4gseNaz5eupZCq4gGPHabvE8fE5TimuDh0Rohg\",\n  \"message\" : \"Successfully login\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "error": {
       "examples": [
@@ -1151,15 +1045,6 @@ define({ "api": [
         {
           "title": "Input",
           "content": "{\n  \"userOriginalProfile\": \"Nicho_SmartCard.jpg\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": \"public/user/photos/new/dito/dito_1553009709342.png\",\n  \"message\" : \"Profile image updated successfully\"\n}",
           "type": "json"
         }
       ]
@@ -1253,23 +1138,7 @@ define({ "api": [
             "description": "<p>Password (if not provided then will return error)</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"newEmail\": \"ditohafizh__baru@gmail.com\",\n  \"password\": \"dito\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 OK {\n  \"body\": {\n    \"name\": \"Dito Hafizh\",\n    \"username\": \"dito\",\n    \"email\": \"ditohafizh__baru@gmail.com\",\n    \"password\": \"$2b$10$mWcBjk6cbpTD99LrZa//lu2Bsv1Uox/sCbCx7TI9NZsA.HzVyhREq\"\n  }\n  \"message\" : \"User updated\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "error": {
       "examples": [
